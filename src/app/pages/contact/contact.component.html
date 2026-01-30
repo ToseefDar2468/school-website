@@ -1,5 +1,103 @@
-<section class="space-y-2">
-  <h1 class="text-3xl font-semibold text-slate-900">Contact</h1>
-  <p class="text-base text-slate-600">Content placeholder for the contact page.</p>
+<section class="space-y-12">
+  <header class="card space-y-2">
+    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-text-muted">Home / Contact</p>
+    <h1 class="page-title">Contact Us</h1>
+    <p class="page-subtitle">
+      We would love to hear from you. Reach out for admissions, campus visits, or general inquiries.
+    </p>
+  </header>
+
+  <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    @for (card of cards; track card.title) {
+      <article class="card card-hover space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 class="text-base font-semibold text-text">{{ card.title }}</h3>
+        <p class="text-sm font-semibold text-primary">{{ card.value }}</p>
+        <p class="text-sm text-text-muted">{{ card.description }}</p>
+      </article>
+    }
+  </section>
+
+  <section class="card space-y-4">
+    <h2 class="section-title">Find us on the map</h2>
+    <div class="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border bg-surface-2">
+      <iframe
+        class="h-full w-full"
+        title="School location map"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q=Model%20Town%20Lahore&t=&z=13&ie=UTF8&iwloc=&output=embed"
+      ></iframe>
+    </div>
+  </section>
+
+  <section class="card space-y-6">
+    <h2 class="section-title">Send a message</h2>
+
+    @if (successId()) {
+      <div class="card space-y-2 border border-primary/30 bg-primary/10 text-sm text-text">
+        <p class="font-semibold text-primary">Message sent successfully.</p>
+        <p>Your request ID is <span class="font-semibold">{{ successId() }}</span>.</p>
+        <p>We will respond shortly.</p>
+      </div>
+    }
+
+    <form class="grid gap-4 md:grid-cols-2" [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" autocomplete="name" />
+        @if (hasError('name', 'required')) {
+          <mat-error>Name is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone" type="tel" autocomplete="tel" />
+        @if (hasError('phone', 'required')) {
+          <mat-error>Phone number is required.</mat-error>
+        }
+        @if (hasError('phone', 'pattern')) {
+          <mat-error>Please enter a valid phone number.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="w-full md:col-span-2" appearance="outline">
+        <mat-label>Subject</mat-label>
+        <input matInput formControlName="subject" />
+        @if (hasError('subject', 'required')) {
+          <mat-error>Subject is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="w-full md:col-span-2" appearance="outline">
+        <mat-label>Message</mat-label>
+        <textarea matInput formControlName="message" rows="4"></textarea>
+        @if (hasError('message', 'required')) {
+          <mat-error>Message is required.</mat-error>
+        }
+        @if (hasError('message', 'minlength')) {
+          <mat-error>Message should be at least 10 characters.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="md:col-span-2 flex flex-wrap items-center gap-3">
+        <button
+          class="flex items-center gap-2"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="submitting() || isInvalid()"
+        >
+          @if (submitting()) {
+            <mat-progress-spinner diameter="18" mode="indeterminate" color="accent"></mat-progress-spinner>
+            <span>Sending...</span>
+          } @else {
+            Send message
+          }
+        </button>
+        <p class="text-xs text-text-muted">We will respond within 1–2 working days.</p>
+      </div>
+    </form>
+  </section>
 </section>
 
