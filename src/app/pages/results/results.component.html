@@ -1,5 +1,73 @@
-<section class="space-y-2">
-  <h1 class="text-3xl font-semibold text-slate-900">Results</h1>
-  <p class="text-base text-slate-600">Content placeholder for the results page.</p>
+<section class="space-y-12">
+  <header class="card space-y-2">
+    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-text-muted">Home / Results</p>
+    <h1 class="page-title">Results & Achievements</h1>
+    <p class="page-subtitle">
+      Celebrating academic excellence, student progress, and community achievements.
+    </p>
+  </header>
+
+  <section class="card space-y-6">
+    <h2 class="section-title">Highlights</h2>
+    @if (highlights$ | async; as highlights) {
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        @for (item of highlights; track item.id) {
+          <article class="card card-hover space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
+              {{ item.year }}
+            </p>
+            <h3 class="text-lg font-semibold text-text">{{ item.metric }}</h3>
+            <p class="text-2xl font-semibold text-primary">{{ item.value }}</p>
+            @if (item.note) {
+              <p class="text-sm text-text-muted">{{ item.note }}</p>
+            }
+          </article>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="card space-y-6">
+    <div class="space-y-1">
+      <h2 class="section-title">Top performers</h2>
+      <p class="text-sm text-text-muted">Demo highlights from recent cohorts.</p>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      @for (student of topPerformers; track student.name) {
+        <article class="card card-hover space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">{{ student.year }}</p>
+          <h3 class="text-base font-semibold text-text">{{ student.name }}</h3>
+          <p class="text-sm text-text-muted">{{ student.score }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="card space-y-6">
+    <h2 class="section-title">Achievements timeline</h2>
+    <ol class="space-y-4">
+      @for (achievement of achievements; track achievement.title) {
+        <li class="card card-hover rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div class="flex flex-wrap items-start justify-between gap-2">
+            <div class="space-y-2">
+              <h3 class="text-base font-semibold text-text">{{ achievement.title }}</h3>
+              <p class="text-sm text-text-muted">{{ achievement.description }}</p>
+            </div>
+            <span class="badge">{{ achievement.year }}</span>
+          </div>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <section class="card card-hover flex flex-col gap-4 bg-secondary text-surface md:flex-row md:items-center md:justify-between">
+    <div class="space-y-2">
+      <h2 class="text-2xl font-semibold text-surface">Request Prospectus</h2>
+      <p class="text-sm text-surface/80">
+        Learn more about our programs, admissions, and academic pathways.
+      </p>
+    </div>
+    <a class="btn btn-inverse" routerLink="/admissions">Request prospectus</a>
+  </section>
 </section>
 
