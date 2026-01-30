@@ -6,13 +6,24 @@ import { combineLatest, map, startWith } from 'rxjs';
 import { Notice } from '../../core/models/notice.model';
 import { DataService } from '../../core/services/data.service';
 import { sortByDateISO } from '../../core/utils/date.utils';
+import { BadgeComponent } from '../../components/ui/badge/badge.component';
+import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
 
 type NoticeFilter = 'all' | 'pinned' | 'month';
 
 @Component({
   selector: 'app-notices',
   standalone: true,
-  imports: [AsyncPipe, DatePipe, NgFor, NgIf, ReactiveFormsModule, RouterLink],
+  imports: [
+    AsyncPipe,
+    DatePipe,
+    NgFor,
+    NgIf,
+    ReactiveFormsModule,
+    RouterLink,
+    BadgeComponent,
+    SectionHeaderComponent
+  ],
   templateUrl: './notices.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

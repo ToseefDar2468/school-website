@@ -5,11 +5,20 @@ import { RouterLink } from '@angular/router';
 import { combineLatest, map, startWith } from 'rxjs';
 import { Event } from '../../core/models/event.model';
 import { DataService } from '../../core/services/data.service';
+import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
 
 @Component({
   selector: 'app-events',
   standalone: true,
-  imports: [AsyncPipe, DatePipe, NgFor, NgIf, ReactiveFormsModule, RouterLink],
+  imports: [
+    AsyncPipe,
+    DatePipe,
+    NgFor,
+    NgIf,
+    ReactiveFormsModule,
+    RouterLink,
+    SectionHeaderComponent
+  ],
   templateUrl: './events.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -98,15 +98,15 @@
 </section>
 
 <section class="mt-12">
-  <div class="flex flex-wrap items-center justify-between gap-3">
-    <div>
-      <h2 class="text-2xl font-semibold text-slate-900">Latest notices</h2>
-      <p class="text-sm text-slate-600">Important announcements and updates.</p>
-    </div>
-    <a class="text-sm font-semibold text-emerald-600 hover:text-emerald-700" routerLink="/notices">
-      View all notices
-    </a>
-  </div>
+  <app-section-header
+    title="Latest notices"
+    subtitle="Important announcements and updates."
+    actionLabel="View all notices"
+    actionLink="/notices"
+    titleClass="text-2xl font-semibold text-slate-900"
+    subtitleClass="text-sm text-slate-600"
+    actionClass="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+  />
 
   <div class="mt-6 grid gap-4 lg:grid-cols-2">
     @if (pinnedNotices$ | async; as pinned) {
@@ -115,7 +115,7 @@
         @for (notice of pinned; track notice.id) {
           <article class="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4">
             <div class="flex flex-wrap items-center gap-3 text-xs text-emerald-700">
-              <span class="rounded-full bg-emerald-600/10 px-2 py-1 font-semibold">Pinned</span>
+              <app-badge label="Pinned" variant="pinned"></app-badge>
               <span>{{ notice.dateISO | date: 'mediumDate' }}</span>
             </div>
             <h4 class="mt-2 text-base font-semibold text-slate-900">{{ notice.title }}</h4>
@@ -141,15 +141,15 @@
 </section>
 
 <section class="mt-12">
-  <div class="flex flex-wrap items-center justify-between gap-3">
-    <div>
-      <h2 class="text-2xl font-semibold text-slate-900">Upcoming events</h2>
-      <p class="text-sm text-slate-600">Key dates and campus gatherings.</p>
-    </div>
-    <a class="text-sm font-semibold text-emerald-600 hover:text-emerald-700" routerLink="/events">
-      View all events
-    </a>
-  </div>
+  <app-section-header
+    title="Upcoming events"
+    subtitle="Key dates and campus gatherings."
+    actionLabel="View all events"
+    actionLink="/events"
+    titleClass="text-2xl font-semibold text-slate-900"
+    subtitleClass="text-sm text-slate-600"
+    actionClass="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+  />
 
   @if (upcomingEvents$ | async; as events) {
     <div class="mt-6 grid gap-4 md:grid-cols-2">
@@ -170,15 +170,15 @@
 </section>
 
 <section class="mt-12">
-  <div class="flex flex-wrap items-center justify-between gap-3">
-    <div>
-      <h2 class="text-2xl font-semibold text-slate-900">Gallery highlights</h2>
-      <p class="text-sm text-slate-600">Moments from learning, leadership, and community.</p>
-    </div>
-    <a class="text-sm font-semibold text-emerald-600 hover:text-emerald-700" routerLink="/gallery">
-      View full gallery
-    </a>
-  </div>
+  <app-section-header
+    title="Gallery highlights"
+    subtitle="Moments from learning, leadership, and community."
+    actionLabel="View full gallery"
+    actionLink="/gallery"
+    titleClass="text-2xl font-semibold text-slate-900"
+    subtitleClass="text-sm text-slate-600"
+    actionClass="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+  />
 
   @if (galleryPreview$ | async; as gallery) {
     <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -192,12 +192,12 @@
 </section>
 
 <section class="mt-12">
-  <div class="flex flex-wrap items-center justify-between gap-3">
-    <div>
-      <h2 class="text-2xl font-semibold text-slate-900">What our community says</h2>
-      <p class="text-sm text-slate-600">Families and alumni share their experiences.</p>
-    </div>
-  </div>
+  <app-section-header
+    title="What our community says"
+    subtitle="Families and alumni share their experiences."
+    titleClass="text-2xl font-semibold text-slate-900"
+    subtitleClass="text-sm text-slate-600"
+  />
 
   @if (testimonials$ | async; as testimonials) {
     <div class="mt-6 grid gap-4 md:grid-cols-3">

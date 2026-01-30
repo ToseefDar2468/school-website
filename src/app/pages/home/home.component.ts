@@ -9,6 +9,8 @@ import { GalleryAlbum } from '../../core/models/gallery-album.model';
 import { Testimonial } from '../../core/models/testimonial.model';
 import { DataService } from '../../core/services/data.service';
 import { compareDateISO, sortByDateISO } from '../../core/utils/date.utils';
+import { BadgeComponent } from '../../components/ui/badge/badge.component';
+import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
 
 interface TrustIndicator {
   title: string;
@@ -33,7 +35,7 @@ interface NoticeCardView extends Notice {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [AsyncPipe, DatePipe, RouterLink],
+  imports: [AsyncPipe, DatePipe, RouterLink, BadgeComponent, SectionHeaderComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent {

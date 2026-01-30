@@ -1,0 +1,16 @@
+<section
+  class="card card-hover flex flex-col gap-4 bg-secondary text-surface md:flex-row md:items-center md:justify-between"
+>
+  <div class="space-y-2">
+    <h2 class="text-2xl font-semibold text-surface">{{ heading() }}</h2>
+    <p class="text-sm text-surface/80">{{ text() }}</p>
+  </div>
+  <div class="flex flex-wrap gap-3">
+    <a class="btn btn-inverse" [routerLink]="primaryLink()">{{ primaryLabel() }}</a>
+    @if (showSecondary()) {
+      <a class="btn btn-outline border-surface/60 text-surface hover:bg-surface/10" [routerLink]="secondaryLink()">
+        {{ secondaryLabel() }}
+      </a>
+    }
+  </div>
+</section>

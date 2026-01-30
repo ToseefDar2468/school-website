@@ -1,7 +1,13 @@
 <section class="space-y-8">
-  <header class="space-y-2">
-    <h1 class="page-title">Gallery</h1>
-    <p class="page-subtitle">Browse album highlights from school events and activities.</p>
+  <header>
+    <app-section-header
+      title="Gallery"
+      subtitle="Browse album highlights from school events and activities."
+      [headingLevel]="1"
+      titleClass="page-title"
+      subtitleClass="page-subtitle"
+      containerClass="space-y-2"
+    />
   </header>
 
   <div class="card flex items-center gap-3 md:justify-self-end">
@@ -23,7 +29,7 @@
           <img class="h-full w-full object-cover" [src]="album.coverImageUrl" [alt]="album.title" />
         </div>
         <div class="mt-4 space-y-2">
-          <span class="badge">{{ album.category }}</span>
+          <app-badge [label]="album.category"></app-badge>
           <h3 class="text-lg font-semibold text-text">{{ album.title }}</h3>
           <a class="link text-sm font-semibold" [routerLink]="['/gallery', album.id]">
             View album

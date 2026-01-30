@@ -1,9 +1,13 @@
 <section class="space-y-8">
-  <header class="space-y-2">
-    <h1 class="page-title">Notices</h1>
-    <p class="page-subtitle">
-      Stay updated with the latest announcements, circulars, and school updates.
-    </p>
+  <header>
+    <app-section-header
+      title="Notices"
+      subtitle="Stay updated with the latest announcements, circulars, and school updates."
+      [headingLevel]="1"
+      titleClass="page-title"
+      subtitleClass="page-subtitle"
+      containerClass="space-y-2"
+    />
   </header>
 
   <div class="grid gap-4 md:grid-cols-[1fr_auto]">
@@ -31,14 +35,14 @@
     <section class="space-y-4" *ngIf="vm.pinned.length">
       <div class="flex items-center justify-between">
         <h2 class="section-title">Pinned notices</h2>
-        <span class="badge badge-primary">Pinned</span>
+        <app-badge label="Pinned" variant="pinned"></app-badge>
       </div>
 
       <div class="grid gap-4 md:grid-cols-2">
         <article class="card card-hover space-y-3" *ngFor="let notice of vm.pinned; trackBy: trackById">
           <div class="flex flex-wrap items-center gap-2 text-xs text-text-muted">
             <span>{{ notice.dateISO | date: 'mediumDate' }}</span>
-            <span class="badge badge-primary">Pinned</span>
+            <app-badge label="Pinned" variant="pinned"></app-badge>
           </div>
           <h3 class="text-lg font-semibold text-text">{{ notice.title }}</h3>
           <p class="text-sm text-text-muted">{{ excerpt(notice.description) }}</p>

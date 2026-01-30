@@ -5,13 +5,23 @@ import { RouterLink } from '@angular/router';
 import { combineLatest, map, startWith } from 'rxjs';
 import { GalleryAlbum } from '../../core/models/gallery-album.model';
 import { DataService } from '../../core/services/data.service';
+import { BadgeComponent } from '../../components/ui/badge/badge.component';
+import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
 
 type CategoryFilter = 'All' | string;
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [AsyncPipe, NgFor, NgIf, ReactiveFormsModule, RouterLink],
+  imports: [
+    AsyncPipe,
+    NgFor,
+    NgIf,
+    ReactiveFormsModule,
+    RouterLink,
+    BadgeComponent,
+    SectionHeaderComponent
+  ],
   templateUrl: './gallery.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -1,9 +1,13 @@
 <section class="space-y-8">
-  <header class="space-y-2">
-    <h1 class="page-title">Events</h1>
-    <p class="page-subtitle">
-      Discover upcoming school programs, academic events, and community gatherings.
-    </p>
+  <header>
+    <app-section-header
+      title="Events"
+      subtitle="Discover upcoming school programs, academic events, and community gatherings."
+      [headingLevel]="1"
+      titleClass="page-title"
+      subtitleClass="page-subtitle"
+      containerClass="space-y-2"
+    />
   </header>
 
   <div class="grid gap-4 md:grid-cols-[1fr_auto]">

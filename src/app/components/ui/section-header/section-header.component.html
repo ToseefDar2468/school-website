@@ -1,0 +1,30 @@
+<div [class]="containerClass()">
+  <div class="space-y-1">
+    @switch (headingLevel()) {
+      @case (1) {
+        <h1 [class]="titleClass()">{{ title() }}</h1>
+      }
+      @case (3) {
+        <h3 [class]="titleClass()">{{ title() }}</h3>
+      }
+      @case (4) {
+        <h4 [class]="titleClass()">{{ title() }}</h4>
+      }
+      @case (5) {
+        <h5 [class]="titleClass()">{{ title() }}</h5>
+      }
+      @case (6) {
+        <h6 [class]="titleClass()">{{ title() }}</h6>
+      }
+      @default {
+        <h2 [class]="titleClass()">{{ title() }}</h2>
+      }
+    }
+    @if (subtitle()) {
+      <p [class]="subtitleClass()">{{ subtitle() }}</p>
+    }
+  </div>
+  @if (showAction()) {
+    <a [class]="actionClass()" [routerLink]="actionLink()">{{ actionLabel() }}</a>
+  }
+</div>

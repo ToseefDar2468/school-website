@@ -1,4 +1,4 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map, of, switchMap } from 'rxjs';
@@ -8,7 +8,7 @@ import { LightboxModalComponent } from '../../components/lightbox-modal/lightbox
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [AsyncPipe, NgFor, NgIf, RouterLink, LightboxModalComponent],
+  imports: [AsyncPipe, RouterLink, LightboxModalComponent],
   templateUrl: './album-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
