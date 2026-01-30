@@ -1,5 +1,36 @@
-<section class="space-y-2">
-  <h1 class="text-3xl font-semibold text-slate-900">Gallery</h1>
-  <p class="text-base text-slate-600">Content placeholder for the gallery page.</p>
+<section class="space-y-8">
+  <header class="space-y-2">
+    <h1 class="page-title">Gallery</h1>
+    <p class="page-subtitle">Browse album highlights from school events and activities.</p>
+  </header>
+
+  <div class="card flex items-center gap-3 md:justify-self-end">
+    <span class="text-sm font-semibold text-text">Category</span>
+    <select class="bg-transparent text-sm text-text outline-none" [formControl]="categoryControl">
+      <option *ngFor="let category of (view$ | async)?.categories" [value]="category">
+        {{ category }}
+      </option>
+    </select>
+  </div>
+
+  <ng-container *ngIf="view$ | async as vm">
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <article
+        class="card card-hover overflow-hidden"
+        *ngFor="let album of vm.albums; trackBy: trackById"
+      >
+        <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-2">
+          <img class="h-full w-full object-cover" [src]="album.coverImageUrl" [alt]="album.title" />
+        </div>
+        <div class="mt-4 space-y-2">
+          <span class="badge">{{ album.category }}</span>
+          <h3 class="text-lg font-semibold text-text">{{ album.title }}</h3>
+          <a class="link text-sm font-semibold" [routerLink]="['/gallery', album.id]">
+            View album
+          </a>
+        </div>
+      </article>
+    </div>
+  </ng-container>
 </section>
 

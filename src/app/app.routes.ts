@@ -67,6 +67,13 @@ export const routes: Routes = [
       import('./pages/events/events.component').then((m) => m.EventsComponent)
   },
   {
+    path: 'gallery/:id',
+    loadComponent: () =>
+      import('./pages/gallery/album-detail.component').then(
+        (m) => m.AlbumDetailComponent
+      )
+  },
+  {
     path: 'gallery',
     loadComponent: () =>
       import('./pages/gallery/gallery.component').then(

@@ -1,0 +1,45 @@
+<section class="space-y-8">
+  @if (album$ | async; as album) {
+    <header class="space-y-2">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="badge">{{ album.category }}</span>
+      </div>
+      <h1 class="page-title">{{ album.title }}</h1>
+    </header>
+
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      @for (image of album.imageUrls; track $index) {
+        <button
+          class="group overflow-hidden rounded-xl bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+          type="button"
+          (click)="openLightbox(image, album.title)"
+        >
+          <img
+            class="h-40 w-full object-cover transition group-hover:scale-[1.02]"
+            [src]="image"
+            [alt]="album.title"
+          />
+        </button>
+      }
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <a class="btn btn-outline" routerLink="/gallery">Back to gallery</a>
+    </div>
+
+    <app-lightbox-modal
+      [isOpen]="!!selectedImageUrl"
+      [imageUrl]="selectedImageUrl"
+      [imageAlt]="selectedImageAlt"
+      (closed)="closeLightbox()"
+    />
+  } @else {
+    <div class="card space-y-3">
+      <h1 class="text-2xl font-semibold text-text">Album not found</h1>
+      <p class="text-sm text-text-muted">
+        The album you are looking for does not exist or was removed.
+      </p>
+      <a class="link text-sm font-semibold" routerLink="/gallery">Back to gallery</a>
+    </div>
+  }
+</section>
