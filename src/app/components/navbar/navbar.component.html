@@ -1,0 +1,62 @@
+<header class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur">
+  <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+    <a
+      class="text-base font-semibold uppercase tracking-wide text-slate-900"
+      routerLink=""
+      (click)="closeMenu()"
+    >
+      Islamic Vision Model High School
+    </a>
+
+    <nav class="hidden items-center gap-5 text-sm font-medium text-slate-700 md:flex">
+      @for (item of navItems; track item.label) {
+        <a
+          class="transition-colors hover:text-emerald-600"
+          [routerLink]="item.path"
+          routerLinkActive="text-emerald-600"
+          [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    <button
+      class="inline-flex items-center justify-center rounded-md border border-slate-200 p-2 text-slate-700 transition hover:border-emerald-500 hover:text-emerald-600 md:hidden"
+      type="button"
+      aria-label="Toggle menu"
+      [attr.aria-expanded]="isMenuOpen()"
+      aria-controls="primary-navigation"
+      (click)="toggleMenu()"
+    >
+      <span class="sr-only">Toggle menu</span>
+      <span class="block h-0.5 w-5 bg-current"></span>
+      <span class="mt-1 block h-0.5 w-5 bg-current"></span>
+      <span class="mt-1 block h-0.5 w-5 bg-current"></span>
+    </button>
+  </div>
+
+  <div
+    id="primary-navigation"
+    class="origin-top overflow-hidden transition-all duration-300 md:hidden"
+    [ngClass]="
+      isMenuOpen()
+        ? 'max-h-96 translate-y-0 opacity-100'
+        : 'max-h-0 -translate-y-2 opacity-0 pointer-events-none'
+    "
+  >
+    <div class="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 pb-4 text-sm font-medium text-slate-700 sm:px-6 lg:px-8">
+      @for (item of navItems; track item.label) {
+        <a
+          class="rounded-md px-3 py-2 transition-colors hover:bg-emerald-50 hover:text-emerald-600"
+          [routerLink]="item.path"
+          routerLinkActive="bg-emerald-50 text-emerald-600"
+          [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+          (click)="closeMenu()"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </div>
+  </div>
+</header>

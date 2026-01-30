@@ -1,0 +1,42 @@
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-3 lg:px-8">
+    <div class="space-y-3">
+      <p class="text-sm font-semibold uppercase tracking-wide text-slate-900">Quick Links</p>
+      <div class="flex flex-col gap-2 text-sm text-slate-600">
+        @for (link of quickLinks; track link.label) {
+          <a class="transition-colors hover:text-emerald-600" [routerLink]="link.path">
+            {{ link.label }}
+          </a>
+        }
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <p class="text-sm font-semibold uppercase tracking-wide text-slate-900">Contact Info</p>
+      <div class="space-y-1 text-sm text-slate-600">
+        <p>Phone: +1 (555) 014-1122</p>
+        <p>Email: info@ivmhs.edu</p>
+        <p>Office Hours: Mon - Fri, 8:00 AM - 3:30 PM</p>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <p class="text-sm font-semibold uppercase tracking-wide text-slate-900">Address + Socials</p>
+      <div class="space-y-3 text-sm text-slate-600">
+        <p>123 Crescent Avenue, Brookfield, NY 11701</p>
+        <div class="flex flex-wrap gap-4">
+          <a class="transition-colors hover:text-emerald-600" href="#">Facebook</a>
+          <a class="transition-colors hover:text-emerald-600" href="#">Instagram</a>
+          <a class="transition-colors hover:text-emerald-600" href="#">YouTube</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-slate-200/80">
+    <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 text-xs text-slate-500 sm:px-6 lg:px-8">
+      <span>© {{ year }} Islamic Vision Model High School. All rights reserved.</span>
+      <span>Excellence | Integrity | Service</span>
+    </div>
+  </div>
+</footer>
