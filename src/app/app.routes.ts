@@ -41,6 +41,13 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'notices/:id',
+    loadComponent: () =>
+      import('./pages/notices/notice-detail.component').then(
+        (m) => m.NoticeDetailComponent
+      )
+  },
+  {
     path: 'notices',
     loadComponent: () =>
       import('./pages/notices/notices.component').then(

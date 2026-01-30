@@ -1,5 +1,80 @@
-<section class="space-y-2">
-  <h1 class="text-3xl font-semibold text-slate-900">Notices</h1>
-  <p class="text-base text-slate-600">Content placeholder for the notices page.</p>
+<section class="space-y-8">
+  <header class="space-y-2">
+    <h1 class="page-title">Notices</h1>
+    <p class="page-subtitle">
+      Stay updated with the latest announcements, circulars, and school updates.
+    </p>
+  </header>
+
+  <div class="grid gap-4 md:grid-cols-[1fr_auto]">
+    <label class="card flex items-center gap-3">
+      <span class="sr-only">Search notices</span>
+      <input
+        class="w-full bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
+        type="search"
+        placeholder="Search notices by title or description"
+        [formControl]="searchControl"
+      />
+    </label>
+
+    <label class="card flex items-center gap-3 md:justify-self-end">
+      <span class="text-sm font-semibold text-text">Filter</span>
+      <select class="bg-transparent text-sm text-text outline-none" [formControl]="filterControl">
+        <option *ngFor="let option of filterOptions" [value]="option.value">
+          {{ option.label }}
+        </option>
+      </select>
+    </label>
+  </div>
+
+  <ng-container *ngIf="vm$ | async as vm">
+    <section class="space-y-4" *ngIf="vm.pinned.length">
+      <div class="flex items-center justify-between">
+        <h2 class="section-title">Pinned notices</h2>
+        <span class="badge badge-primary">Pinned</span>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <article class="card card-hover space-y-3" *ngFor="let notice of vm.pinned; trackBy: trackById">
+          <div class="flex flex-wrap items-center gap-2 text-xs text-text-muted">
+            <span>{{ notice.dateISO | date: 'mediumDate' }}</span>
+            <span class="badge badge-primary">Pinned</span>
+          </div>
+          <h3 class="text-lg font-semibold text-text">{{ notice.title }}</h3>
+          <p class="text-sm text-text-muted">{{ excerpt(notice.description) }}</p>
+          <a class="link text-sm font-semibold" [routerLink]="['/notices', notice.id]">
+            Read more
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="section-title">All notices</h2>
+
+      <div class="grid gap-4 md:grid-cols-2" *ngIf="vm.regular.length; else emptyState">
+        <article
+          class="card card-hover space-y-3"
+          *ngFor="let notice of vm.regular; trackBy: trackById"
+        >
+          <div class="flex flex-wrap items-center gap-2 text-xs text-text-muted">
+            <span>{{ notice.dateISO | date: 'mediumDate' }}</span>
+          </div>
+          <h3 class="text-lg font-semibold text-text">{{ notice.title }}</h3>
+          <p class="text-sm text-text-muted">{{ excerpt(notice.description) }}</p>
+          <a class="link text-sm font-semibold" [routerLink]="['/notices', notice.id]">
+            Read more
+          </a>
+        </article>
+      </div>
+
+      <ng-template #emptyState>
+        <div class="card space-y-2 text-sm text-text-muted">
+          <p>No notices match your search and filter selection.</p>
+          <p>Try clearing the search or switching filters.</p>
+        </div>
+      </ng-template>
+    </section>
+  </ng-container>
 </section>
 
