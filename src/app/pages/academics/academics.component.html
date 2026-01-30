@@ -1,5 +1,83 @@
-<section class="space-y-2">
-  <h1 class="text-3xl font-semibold text-slate-900">Academics</h1>
-  <p class="text-base text-slate-600">Content placeholder for the academics page.</p>
+<section class="space-y-12">
+  <header class="card space-y-2">
+    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-text-muted">Home / Academics</p>
+    <h1 class="page-title">Academics</h1>
+    <p class="page-subtitle">
+      Structured learning pathways that combine strong academics with Islamic character building.
+    </p>
+  </header>
+
+  <section class="card space-y-6">
+    <h2 class="section-title">Programs & classes offered</h2>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      @for (program of programs; track program.name) {
+        <article class="card card-hover space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div class="space-y-1">
+            <h3 class="text-lg font-semibold text-text">{{ program.name }}</h3>
+            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-text-muted">
+              {{ program.ageRange }}
+            </p>
+          </div>
+          <p class="text-sm text-text-muted">{{ program.focus }}</p>
+          <a
+            class="link text-sm font-semibold"
+            [routerLink]="['/admissions']"
+            [queryParams]="{ class: program.query }"
+          >
+            Ask about this class
+          </a>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="card space-y-4">
+    <h2 class="section-title">Curriculum approach</h2>
+    <ul class="space-y-3 text-sm text-text">
+      @for (point of curriculumPoints; track point) {
+        <li class="flex gap-3">
+          <span class="mt-1 h-2 w-2 rounded-full bg-primary"></span>
+          <span>{{ point }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="card space-y-6">
+    <h2 class="section-title">Co-curricular activities</h2>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      @for (activity of activities; track activity.title) {
+        <article class="card card-hover space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 class="text-base font-semibold text-text">{{ activity.title }}</h3>
+          <p class="text-sm text-text-muted">{{ activity.description }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="card space-y-6">
+    <h2 class="section-title">Assessment & exams</h2>
+    <ol class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      @for (step of assessmentSteps; track step.title) {
+        <li class="card card-hover space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
+            Step {{ $index + 1 }}
+          </p>
+          <h3 class="text-base font-semibold text-text">{{ step.title }}</h3>
+          <p class="text-sm text-text-muted">{{ step.description }}</p>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <section class="card card-hover flex flex-col gap-4 bg-secondary text-surface md:flex-row md:items-center md:justify-between">
+    <div class="space-y-2">
+      <h2 class="text-2xl font-semibold text-surface">Admissions Open</h2>
+      <p class="text-sm text-surface/80">
+        Begin your child’s academic journey with us today.
+      </p>
+    </div>
+    <a class="btn btn-inverse" routerLink="/admissions">Apply for admissions</a>
+  </section>
 </section>
 
