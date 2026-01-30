@@ -1,5 +1,147 @@
-<section class="space-y-2">
-  <h1 class="text-3xl font-semibold text-slate-900">Admissions</h1>
-  <p class="text-base text-slate-600">Content placeholder for the admissions page.</p>
-</section>
+<section class="space-y-12">
+  <header class="card space-y-2">
+    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-text-muted">Home / Admissions</p>
+    <h1 class="page-title">Admissions</h1>
+    <p class="page-subtitle">
+      Begin your child’s learning journey with a supportive, faith-centered community.
+    </p>
+  </header>
 
+  <section class="card space-y-6">
+    <h2 class="section-title">Admissions overview</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="space-y-3">
+        <h3 class="text-base font-semibold text-text">Requirements</h3>
+        <ul class="space-y-2 text-sm text-text-muted">
+          @for (item of requirements; track item) {
+            <li class="flex gap-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <span class="mt-1 h-2 w-2 rounded-full bg-primary"></span>
+              <span>{{ item }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+      <div class="space-y-3">
+        <h3 class="text-base font-semibold text-text">Documents</h3>
+        <ul class="space-y-2 text-sm text-text-muted">
+          @for (item of documents; track item) {
+            <li class="flex gap-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <span class="mt-1 h-2 w-2 rounded-full bg-primary"></span>
+              <span>{{ item }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+      <div class="space-y-3">
+        <h3 class="text-base font-semibold text-text">Steps</h3>
+        <ol class="space-y-2 text-sm text-text-muted">
+          @for (step of steps; track step) {
+            <li class="flex gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-surface-2 text-xs font-semibold text-text">
+                {{ $index + 1 }}
+              </span>
+              <span>{{ step }}</span>
+            </li>
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="card space-y-6">
+    <h2 class="section-title">Inquiry form</h2>
+
+    @if (successId()) {
+      <div class="card space-y-2 border border-primary/30 bg-primary/10 text-sm text-text">
+        <p class="font-semibold text-primary">Inquiry submitted successfully.</p>
+        <p>Your inquiry ID is <span class="font-semibold">{{ successId() }}</span>.</p>
+        <p>We will contact you within 1–2 working days.</p>
+      </div>
+    }
+
+    <form class="grid gap-4 md:grid-cols-2" [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>Student name</mat-label>
+        <input matInput formControlName="studentName" autocomplete="name" />
+        @if (hasError('studentName', 'required')) {
+          <mat-error>Student name is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>Parent/Guardian name</mat-label>
+        <input matInput formControlName="parentName" autocomplete="name" />
+        @if (hasError('parentName', 'required')) {
+          <mat-error>Parent name is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone" type="tel" autocomplete="tel" placeholder="+92 300 1234567" />
+        @if (hasError('phone', 'required')) {
+          <mat-error>Phone number is required.</mat-error>
+        }
+        @if (hasError('phone', 'pattern')) {
+          <mat-error>Please enter a valid phone number.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>Class interested</mat-label>
+        <mat-select formControlName="classInterested">
+          <mat-option value="" disabled>Select a class</mat-option>
+          @for (className of classes; track className) {
+            <mat-option [value]="className">{{ className }}</mat-option>
+          }
+        </mat-select>
+        @if (hasError('classInterested', 'required')) {
+          <mat-error>Please select a class.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>City/Area</mat-label>
+        <input matInput formControlName="cityArea" autocomplete="address-level2" />
+      </mat-form-field>
+
+      <mat-form-field class="w-full md:col-span-2" appearance="outline">
+        <mat-label>Message</mat-label>
+        <textarea matInput formControlName="message" rows="4"></textarea>
+      </mat-form-field>
+
+      <div class="md:col-span-2 flex flex-wrap items-center gap-3">
+        <button
+          class="flex items-center gap-2"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="submitting() || isInvalid()"
+        >
+          @if (submitting()) {
+            <mat-progress-spinner diameter="18" mode="indeterminate" color="accent"></mat-progress-spinner>
+            <span>Submitting...</span>
+          } @else {
+            Submit inquiry
+          }
+        </button>
+        <p class="text-xs text-text-muted">We will respond within 1–2 working days.</p>
+      </div>
+    </form>
+  </section>
+
+  <section class="card card-hover flex flex-col gap-4 bg-secondary text-surface md:flex-row md:items-center md:justify-between">
+    <div class="space-y-2">
+      <h2 class="text-2xl font-semibold text-surface">Need help with admissions?</h2>
+      <p class="text-sm text-surface/80">
+        Call or WhatsApp our admissions office for quick guidance.
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <a class="btn btn-inverse" href="tel:+920000000000">Call +92 000 0000000</a>
+      <a class="btn btn-outline border-surface/60 text-surface hover:bg-surface/10" href="https://wa.me/0000000000">
+        WhatsApp us
+      </a>
+    </div>
+  </section>
+</section>
