@@ -1,5 +1,107 @@
-<section class="space-y-2">
-  <h1 class="text-3xl font-semibold text-slate-900">Faculty</h1>
-  <p class="text-base text-slate-600">Content placeholder for the faculty page.</p>
+<section class="space-y-8">
+  <header class="card space-y-2">
+    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-text-muted">Home / Faculty</p>
+    <h1 class="page-title">Our Faculty</h1>
+    <p class="page-subtitle">
+      Meet the dedicated educators guiding every learner with knowledge and care.
+    </p>
+  </header>
+
+  <div class="grid gap-4 md:grid-cols-[1fr_auto]">
+    <label class="card flex items-center gap-3">
+      <span class="sr-only">Search faculty</span>
+      <input
+        class="w-full bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
+        type="search"
+        placeholder="Search by name, designation, or department"
+        [formControl]="searchControl"
+      />
+    </label>
+
+    <label class="card flex items-center gap-3 md:justify-self-end">
+      <span class="text-sm font-semibold text-text">Department</span>
+      <select class="bg-transparent text-sm text-text outline-none" [formControl]="departmentControl">
+        @if (view$ | async; as vm) {
+          @for (dept of vm.departments; track dept) {
+            <option [value]="dept">{{ dept }}</option>
+          }
+        }
+      </select>
+    </label>
+  </div>
+
+  @if (view$ | async; as vm) {
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (member of vm.staff; track trackById($index, member)) {
+        <button class="card card-hover text-left" type="button" (click)="openDetails(member)">
+          <div class="flex items-center gap-4">
+            <div class="h-16 w-16 overflow-hidden rounded-full bg-surface-2">
+              <img class="h-full w-full object-cover" [src]="member.photoUrl" [alt]="member.name" />
+            </div>
+            <div class="space-y-1">
+              <h3 class="text-base font-semibold text-text">{{ member.name }}</h3>
+              <p class="text-sm text-text-muted">{{ member.designation }}</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">
+                {{ member.subjectOrDept }}
+              </p>
+            </div>
+          </div>
+        </button>
+      }
+    </div>
+
+    @if (vm.staff.length === 0) {
+      <div class="card text-sm text-text-muted">
+        No faculty members match your search and filter selection.
+      </div>
+    }
+  }
+
+  @if (selectedStaff) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8"
+      (click)="closeDetails()"
+    >
+      <div
+        #modal
+        class="relative w-full max-w-lg rounded-2xl bg-surface p-6 shadow-lg outline-none"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="selectedStaff.name"
+        tabindex="-1"
+        (click)="$event.stopPropagation()"
+      >
+        <button
+          class="absolute right-4 top-4 rounded-full border border-border bg-surface-2 px-3 py-1 text-xs font-semibold text-text hover:bg-surface"
+          type="button"
+          (click)="closeDetails()"
+        >
+          Close
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-20 w-20 overflow-hidden rounded-full bg-surface-2">
+            <img class="h-full w-full object-cover" [src]="selectedStaff.photoUrl" [alt]="selectedStaff.name" />
+          </div>
+          <div class="space-y-1">
+            <h2 class="text-lg font-semibold text-text">{{ selectedStaff.name }}</h2>
+            <p class="text-sm text-text-muted">{{ selectedStaff.designation }}</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">
+              {{ selectedStaff.subjectOrDept }}
+            </p>
+          </div>
+        </div>
+        <div class="mt-4 space-y-2 text-sm text-text">
+          <p>
+            {{ selectedStaff.name }} is a valued member of the faculty, committed to nurturing student growth
+            and academic excellence.
+          </p>
+          <p>
+            The {{ selectedStaff.subjectOrDept }} department focuses on rigorous learning, skill development,
+            and mentoring students for success.
+          </p>
+        </div>
+      </div>
+    </div>
+  }
 </section>
 
