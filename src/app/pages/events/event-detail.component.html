@@ -1,0 +1,56 @@
+<section class="space-y-8">
+  <ng-container *ngIf="event$ | async as event; else notFound">
+    <div class="overflow-hidden rounded-3xl bg-surface-2">
+      <img
+        class="h-[240px] w-full object-cover md:h-[360px]"
+        [src]="event.coverImageUrl"
+        [alt]="event.title"
+      />
+    </div>
+
+    <div class="space-y-3">
+      <p class="text-sm text-text-muted">{{ event.dateISO | date: 'mediumDate' }}</p>
+      <h1 class="page-title">{{ event.title }}</h1>
+      <p class="text-base text-text">{{ event.venue }}</p>
+    </div>
+
+    <p class="text-base text-text whitespace-pre-line">
+      {{ event.description }}
+    </p>
+
+    <section class="space-y-4">
+      <h2 class="section-title">Event gallery</h2>
+      <div class="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        <button
+          class="group overflow-hidden rounded-xl bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+          *ngFor="let image of event.galleryImageUrls"
+          type="button"
+          (click)="openLightbox(image, event.title)"
+        >
+          <img class="h-24 w-full object-cover transition group-hover:scale-[1.02]" [src]="image" [alt]="event.title" />
+        </button>
+      </div>
+    </section>
+
+    <div class="flex flex-wrap gap-3">
+      <a class="btn btn-outline" routerLink="/events">Back to events</a>
+    </div>
+
+    <app-lightbox-modal
+      [isOpen]="!!selectedImageUrl"
+      [imageUrl]="selectedImageUrl"
+      [imageAlt]="selectedImageAlt"
+      (closed)="closeLightbox()"
+    />
+  </ng-container>
+
+  <ng-template #notFound>
+    <div class="card space-y-3">
+      <h1 class="text-2xl font-semibold text-text">Event not found</h1>
+      <p class="text-sm text-text-muted">
+        The event you are looking for does not exist or was removed.
+      </p>
+      <a class="link text-sm font-semibold" routerLink="/events">Back to events</a>
+    </div>
+  </ng-template>
+</section>

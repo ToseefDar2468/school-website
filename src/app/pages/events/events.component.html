@@ -1,5 +1,72 @@
-<section class="space-y-2">
-  <h1 class="text-3xl font-semibold text-slate-900">Events</h1>
-  <p class="text-base text-slate-600">Content placeholder for the events page.</p>
+<section class="space-y-8">
+  <header class="space-y-2">
+    <h1 class="page-title">Events</h1>
+    <p class="page-subtitle">
+      Discover upcoming school programs, academic events, and community gatherings.
+    </p>
+  </header>
+
+  <div class="grid gap-4 md:grid-cols-[1fr_auto]">
+    <label class="card flex items-center gap-3">
+      <span class="sr-only">Search events</span>
+      <input
+        class="w-full bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
+        type="search"
+        placeholder="Search events by title"
+        [formControl]="searchControl"
+      />
+    </label>
+
+    <div class="card flex items-center gap-2 md:justify-self-end">
+      <button
+        class="btn btn-outline px-4 py-2 text-xs"
+        [class.bg-primary]="(filterControl.value === 'upcoming')"
+        [class.text-white]="(filterControl.value === 'upcoming')"
+        [class.border-primary]="(filterControl.value === 'upcoming')"
+        (click)="setFilter('upcoming')"
+        type="button"
+      >
+        Upcoming
+      </button>
+      <button
+        class="btn btn-outline px-4 py-2 text-xs"
+        [class.bg-primary]="(filterControl.value === 'past')"
+        [class.text-white]="(filterControl.value === 'past')"
+        [class.border-primary]="(filterControl.value === 'past')"
+        (click)="setFilter('past')"
+        type="button"
+      >
+        Past
+      </button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="eventsView$ | async as vm">
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3" *ngIf="vm.events.length; else emptyEvents">
+      <article class="card card-hover overflow-hidden" *ngFor="let event of vm.events; trackBy: trackById">
+        <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-2">
+          <img
+            class="h-full w-full object-cover"
+            [src]="event.coverImageUrl"
+            [alt]="event.title"
+            loading="lazy"
+          />
+        </div>
+        <div class="mt-4 space-y-2">
+          <p class="text-xs text-text-muted">{{ event.dateISO | date: 'mediumDate' }}</p>
+          <h3 class="text-lg font-semibold text-text">{{ event.title }}</h3>
+          <p class="text-sm text-text-muted">{{ event.venue }}</p>
+          <a class="link text-sm font-semibold" [routerLink]="['/events', event.id]">Read more</a>
+        </div>
+      </article>
+    </div>
+
+    <ng-template #emptyEvents>
+      <div class="card space-y-2 text-sm text-text-muted">
+        <p>No events match your search criteria.</p>
+        <p>Try a different filter or clear the search.</p>
+      </div>
+    </ng-template>
+  </ng-container>
 </section>
 
