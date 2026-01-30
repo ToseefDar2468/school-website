@@ -6,6 +6,9 @@ import { combineLatest, map, startWith } from 'rxjs';
 import { Event } from '../../core/models/event.model';
 import { DataService } from '../../core/services/data.service';
 import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-events',
@@ -17,7 +20,10 @@ import { SectionHeaderComponent } from '../../components/ui/section-header/secti
     NgIf,
     ReactiveFormsModule,
     RouterLink,
-    SectionHeaderComponent
+    SectionHeaderComponent,
+    MatButtonToggleModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './events.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

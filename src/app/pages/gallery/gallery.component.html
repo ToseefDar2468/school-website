@@ -10,14 +10,16 @@
     />
   </header>
 
-  <div class="card flex items-center gap-3 md:justify-self-end">
-    <span class="text-sm font-semibold text-text">Category</span>
-    <select class="bg-transparent text-sm text-text outline-none" [formControl]="categoryControl">
-      <option *ngFor="let category of (view$ | async)?.categories" [value]="category">
-        {{ category }}
-      </option>
-    </select>
-  </div>
+  <mat-form-field class="w-full md:w-64" appearance="outline">
+    <mat-label>Category</mat-label>
+    <mat-select [formControl]="categoryControl">
+      @if (view$ | async; as vm) {
+        @for (category of vm.categories; track category) {
+          <mat-option [value]="category">{{ category }}</mat-option>
+        }
+      }
+    </mat-select>
+  </mat-form-field>
 
   <ng-container *ngIf="view$ | async as vm">
     <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">

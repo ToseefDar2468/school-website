@@ -4,11 +4,14 @@ import { AsyncPipe } from '@angular/common';
 import { combineLatest, map, startWith } from 'rxjs';
 import { DataService } from '../../core/services/data.service';
 import { StaffMember } from '../../core/models/staff-member.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-faculty',
   standalone: true,
-  imports: [ReactiveFormsModule, AsyncPipe],
+  imports: [ReactiveFormsModule, AsyncPipe, MatFormFieldModule, MatInputModule, MatSelectModule],
   templateUrl: './faculty.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

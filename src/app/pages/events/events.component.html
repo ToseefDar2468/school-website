@@ -11,37 +11,20 @@
   </header>
 
   <div class="grid gap-4 md:grid-cols-[1fr_auto]">
-    <label class="card flex items-center gap-3">
-      <span class="sr-only">Search events</span>
-      <input
-        class="w-full bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
-        type="search"
-        placeholder="Search events by title"
-        [formControl]="searchControl"
-      />
-    </label>
+    <mat-form-field class="w-full">
+      <mat-label>Search events</mat-label>
+      <input matInput type="search" placeholder="Search events by title" [formControl]="searchControl" />
+    </mat-form-field>
 
-    <div class="card flex items-center gap-2 md:justify-self-end">
-      <button
-        class="btn btn-outline px-4 py-2 text-xs"
-        [class.bg-primary]="(filterControl.value === 'upcoming')"
-        [class.text-white]="(filterControl.value === 'upcoming')"
-        [class.border-primary]="(filterControl.value === 'upcoming')"
-        (click)="setFilter('upcoming')"
-        type="button"
+    <div class="flex items-center justify-start md:justify-end">
+      <mat-button-toggle-group
+        [formControl]="filterControl"
+        aria-label="Filter events"
+        class="rounded-lg border border-border bg-surface"
       >
-        Upcoming
-      </button>
-      <button
-        class="btn btn-outline px-4 py-2 text-xs"
-        [class.bg-primary]="(filterControl.value === 'past')"
-        [class.text-white]="(filterControl.value === 'past')"
-        [class.border-primary]="(filterControl.value === 'past')"
-        (click)="setFilter('past')"
-        type="button"
-      >
-        Past
-      </button>
+        <mat-button-toggle value="upcoming">Upcoming</mat-button-toggle>
+        <mat-button-toggle value="past">Past</mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
   </div>
 

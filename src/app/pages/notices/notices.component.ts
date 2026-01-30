@@ -8,6 +8,9 @@ import { DataService } from '../../core/services/data.service';
 import { sortByDateISO } from '../../core/utils/date.utils';
 import { BadgeComponent } from '../../components/ui/badge/badge.component';
 import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 type NoticeFilter = 'all' | 'pinned' | 'month';
 
@@ -22,7 +25,10 @@ type NoticeFilter = 'all' | 'pinned' | 'month';
     ReactiveFormsModule,
     RouterLink,
     BadgeComponent,
-    SectionHeaderComponent
+    SectionHeaderComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
   ],
   templateUrl: './notices.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

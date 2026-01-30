@@ -7,6 +7,8 @@ import { GalleryAlbum } from '../../core/models/gallery-album.model';
 import { DataService } from '../../core/services/data.service';
 import { BadgeComponent } from '../../components/ui/badge/badge.component';
 import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 type CategoryFilter = 'All' | string;
 
@@ -20,7 +22,9 @@ type CategoryFilter = 'All' | string;
     ReactiveFormsModule,
     RouterLink,
     BadgeComponent,
-    SectionHeaderComponent
+    SectionHeaderComponent,
+    MatFormFieldModule,
+    MatSelectModule
   ],
   templateUrl: './gallery.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

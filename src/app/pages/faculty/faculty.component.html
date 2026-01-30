@@ -8,26 +8,26 @@
   </header>
 
   <div class="grid gap-4 md:grid-cols-[1fr_auto]">
-    <label class="card flex items-center gap-3">
-      <span class="sr-only">Search faculty</span>
+    <mat-form-field class="w-full">
+      <mat-label>Search faculty</mat-label>
       <input
-        class="w-full bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
+        matInput
         type="search"
         placeholder="Search by name, designation, or department"
         [formControl]="searchControl"
       />
-    </label>
+    </mat-form-field>
 
-    <label class="card flex items-center gap-3 md:justify-self-end">
-      <span class="text-sm font-semibold text-text">Department</span>
-      <select class="bg-transparent text-sm text-text outline-none" [formControl]="departmentControl">
+    <mat-form-field class="w-full md:w-64" appearance="outline">
+      <mat-label>Department</mat-label>
+      <mat-select [formControl]="departmentControl">
         @if (view$ | async; as vm) {
           @for (dept of vm.departments; track dept) {
-            <option [value]="dept">{{ dept }}</option>
+            <mat-option [value]="dept">{{ dept }}</mat-option>
           }
         }
-      </select>
-    </label>
+      </mat-select>
+    </mat-form-field>
   </div>
 
   @if (view$ | async; as vm) {
