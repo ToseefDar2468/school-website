@@ -1,0 +1,37 @@
+﻿@if (dialogService.state$ | async; as state) {
+  @if (state.open) {
+    <div class="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/70 px-4 py-8" (click)="dialogService.resolve(false)">
+      <div
+        class="w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="space-y-2">
+          <p class="text-xs uppercase tracking-[0.3em] text-emerald-400">Confirmation</p>
+          <h2 class="text-xl font-semibold text-white">{{ state.title }}</h2>
+          <p class="text-sm text-slate-400">{{ state.message }}</p>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center justify-end gap-3">
+          <button
+            type="button"
+            class="rounded-full border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-200 hover:border-slate-500"
+            (click)="dialogService.resolve(false)"
+          >
+            {{ state.cancelText }}
+          </button>
+          <button
+            type="button"
+            class="rounded-full px-5 py-2 text-xs font-semibold transition"
+            [ngClass]="{
+              'bg-rose-500 text-rose-50 hover:bg-rose-400': state.intent === 'danger',
+              'bg-emerald-500 text-slate-950 hover:bg-emerald-400': state.intent !== 'danger'
+            }"
+            (click)="dialogService.resolve(true)"
+          >
+            {{ state.confirmText }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}

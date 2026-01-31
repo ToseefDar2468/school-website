@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { AuthService } from '../../core/auth/auth.service';
+import { ConfirmDialogComponent } from '../../core/ui/confirm-dialog/confirm-dialog.component';
+import { ToastContainerComponent } from '../../core/ui/toast/toast-container.component';
 
 interface AdminNavItem {
   label: string;
@@ -13,7 +15,7 @@ interface AdminNavItem {
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [NgClass, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [NgClass, RouterLink, RouterLinkActive, RouterOutlet, ConfirmDialogComponent, ToastContainerComponent],
   templateUrl: './admin-layout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

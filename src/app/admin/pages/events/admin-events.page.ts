@@ -1,11 +1,13 @@
 ﻿import { AsyncPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BehaviorSubject, catchError, combineLatest, finalize, map, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, finalize, map, of, shareReplay, switchMap, take, tap } from 'rxjs';
 
 import { Event } from '../../../core/models/event.model';
 import { EventsApiService } from '../../../core/api/events-api.service';
 import { EventUpsertDto } from '../../../core/api/events-api.models';
+import { ConfirmDialogService } from '../../../core/ui/confirm-dialog/confirm-dialog.service';
+import { ToastService } from '../../../core/ui/toast/toast.service';
 import { AdminModalComponent } from '../../components/admin-modal/admin-modal.component';
 
 interface EventFormValue {
@@ -26,12 +28,13 @@ interface EventFormValue {
 })
 export class AdminEventsPage {
   private readonly eventsApi = inject(EventsApiService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly toastService = inject(ToastService);
 
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
   private readonly loadingSubject = new BehaviorSubject<boolean>(false);
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
   private readonly formOpenSubject = new BehaviorSubject<boolean>(false);
-  private readonly deleteOpenSubject = new BehaviorSubject<boolean>(false);
   private readonly editingEventSubject = new BehaviorSubject<Event | null>(null);
   private readonly deleteTargetSubject = new BehaviorSubject<Event | null>(null);
   private readonly savingSubject = new BehaviorSubject<boolean>(false);
@@ -60,6 +63,7 @@ export class AdminEventsPage {
         ),
         catchError(() => {
           this.errorSubject.next('Unable to load events. Please try again.');
+          this.toastService.error('Unable to load events.');
           return of([] as Event[]);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -73,7 +77,6 @@ export class AdminEventsPage {
     isLoading: this.loadingSubject,
     errorMessage: this.errorSubject,
     formOpen: this.formOpenSubject,
-    deleteOpen: this.deleteOpenSubject,
     editingEvent: this.editingEventSubject,
     deleteTarget: this.deleteTargetSubject,
     isSaving: this.savingSubject,
@@ -132,43 +135,50 @@ export class AdminEventsPage {
         next: () => {
           this.closeForm();
           this.refresh$.next();
+          this.toastService.success(
+            editingEvent ? 'Event updated successfully.' : 'Event created successfully.'
+          );
         },
         error: () => {
           this.errorSubject.next('Unable to save event. Please try again.');
+          this.toastService.error('Unable to save event.');
         }
       });
   }
 
   openDelete(event: Event): void {
-    this.deleteTargetSubject.next(event);
-    this.deleteOpenSubject.next(true);
-  }
-
-  closeDelete(): void {
-    this.deleteOpenSubject.next(false);
-    this.deleteTargetSubject.next(null);
-  }
-
-  confirmDelete(): void {
-    const target = this.deleteTargetSubject.getValue();
-    if (!target || this.deletingSubject.getValue()) {
-      return;
-    }
-
-    this.deletingSubject.next(true);
-    this.errorSubject.next(null);
-
-    this.eventsApi
-      .adminDeleteEvent(target.id)
-      .pipe(finalize(() => this.deletingSubject.next(false)))
-      .subscribe({
-        next: () => {
-          this.closeDelete();
-          this.refresh$.next();
-        },
-        error: () => {
-          this.errorSubject.next('Unable to delete event. Please try again.');
+    this.confirmDialog
+      .confirm({
+        title: 'Delete event',
+        message: `Are you sure you want to delete "${event.title}"?`,
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        intent: 'danger'
+      })
+      .pipe(take(1))
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          return;
         }
+
+        this.deleteTargetSubject.next(event);
+        this.deletingSubject.next(true);
+        this.errorSubject.next(null);
+
+        this.eventsApi
+          .adminDeleteEvent(event.id)
+          .pipe(finalize(() => this.deletingSubject.next(false)))
+          .subscribe({
+            next: () => {
+              this.deleteTargetSubject.next(null);
+              this.refresh$.next();
+              this.toastService.success('Event deleted successfully.');
+            },
+            error: () => {
+              this.errorSubject.next('Unable to delete event. Please try again.');
+              this.toastService.error('Unable to delete event.');
+            }
+          });
       });
   }
 

@@ -8,6 +8,7 @@ import {
   Inquiry,
   InquiryStatus
 } from '../../services/inquiries-admin.service';
+import { ToastService } from '../../../core/ui/toast/toast.service';
 
 interface StatusOption {
   label: string;
@@ -23,6 +24,7 @@ interface StatusOption {
 })
 export class AdminInquiriesPage {
   private readonly inquiriesService = inject(AdminInquiriesService);
+  private readonly toastService = inject(ToastService);
 
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly statusControl = new FormControl<InquiryStatus | 'all'>('all', { nonNullable: true });
@@ -71,10 +73,14 @@ export class AdminInquiriesPage {
       .updateStatus(inquiry.id, nextStatus)
       .pipe(finalize(() => this.setPending(inquiry.id, false)))
       .subscribe({
-        next: () => this.refresh$.next(),
+        next: () => {
+          this.refresh$.next();
+          this.toastService.success('Inquiry status updated.');
+        },
         error: () => {
           this.errorMessage.set('Unable to update status. Please try again.');
           this.refresh$.next();
+          this.toastService.error('Unable to update inquiry status.');
         }
       });
   }

@@ -1,11 +1,13 @@
 ﻿import { AsyncPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BehaviorSubject, combineLatest, catchError, finalize, map, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, finalize, of, shareReplay, switchMap, take, tap } from 'rxjs';
 
 import { Notice } from '../../../core/models/notice.model';
 import { NoticesApiService } from '../../../core/api/notices-api.service';
 import { NoticeUpsertDto } from '../../../core/api/notices-api.models';
+import { ConfirmDialogService } from '../../../core/ui/confirm-dialog/confirm-dialog.service';
+import { ToastService } from '../../../core/ui/toast/toast.service';
 import { AdminModalComponent } from '../../components/admin-modal/admin-modal.component';
 
 interface NoticeFormValue {
@@ -25,12 +27,13 @@ interface NoticeFormValue {
 })
 export class AdminNoticesPage {
   private readonly noticesApi = inject(NoticesApiService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly toastService = inject(ToastService);
 
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
   private readonly loadingSubject = new BehaviorSubject<boolean>(false);
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
   private readonly formOpenSubject = new BehaviorSubject<boolean>(false);
-  private readonly deleteOpenSubject = new BehaviorSubject<boolean>(false);
   private readonly editingNoticeSubject = new BehaviorSubject<Notice | null>(null);
   private readonly deleteTargetSubject = new BehaviorSubject<Notice | null>(null);
   private readonly savingSubject = new BehaviorSubject<boolean>(false);
@@ -53,6 +56,7 @@ export class AdminNoticesPage {
       this.noticesApi.getNotices(true).pipe(
         catchError(() => {
           this.errorSubject.next('Unable to load notices. Please try again.');
+          this.toastService.error('Unable to load notices.');
           return of([] as Notice[]);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -66,7 +70,6 @@ export class AdminNoticesPage {
     isLoading: this.loadingSubject,
     errorMessage: this.errorSubject,
     formOpen: this.formOpenSubject,
-    deleteOpen: this.deleteOpenSubject,
     editingNotice: this.editingNoticeSubject,
     deleteTarget: this.deleteTargetSubject,
     isSaving: this.savingSubject,
@@ -119,50 +122,55 @@ export class AdminNoticesPage {
       : this.noticesApi.adminCreateNotice(dto);
 
     request$
-      .pipe(
-        finalize(() => this.savingSubject.next(false))
-      )
+      .pipe(finalize(() => this.savingSubject.next(false)))
       .subscribe({
         next: () => {
           this.closeForm();
           this.refresh$.next();
+          this.toastService.success(
+            editingNotice ? 'Notice updated successfully.' : 'Notice created successfully.'
+          );
         },
         error: () => {
           this.errorSubject.next('Unable to save notice. Please try again.');
+          this.toastService.error('Unable to save notice.');
         }
       });
   }
 
   openDelete(notice: Notice): void {
-    this.deleteTargetSubject.next(notice);
-    this.deleteOpenSubject.next(true);
-  }
-
-  closeDelete(): void {
-    this.deleteOpenSubject.next(false);
-    this.deleteTargetSubject.next(null);
-  }
-
-  confirmDelete(): void {
-    const target = this.deleteTargetSubject.getValue();
-    if (!target || this.deletingSubject.getValue()) {
-      return;
-    }
-
-    this.deletingSubject.next(true);
-    this.errorSubject.next(null);
-
-    this.noticesApi
-      .adminDeleteNotice(target.id)
-      .pipe(finalize(() => this.deletingSubject.next(false)))
-      .subscribe({
-        next: () => {
-          this.closeDelete();
-          this.refresh$.next();
-        },
-        error: () => {
-          this.errorSubject.next('Unable to delete notice. Please try again.');
+    this.confirmDialog
+      .confirm({
+        title: 'Delete notice',
+        message: `Are you sure you want to delete "${notice.title}"?`,
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        intent: 'danger'
+      })
+      .pipe(take(1))
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          return;
         }
+
+        this.deleteTargetSubject.next(notice);
+        this.deletingSubject.next(true);
+        this.errorSubject.next(null);
+
+        this.noticesApi
+          .adminDeleteNotice(notice.id)
+          .pipe(finalize(() => this.deletingSubject.next(false)))
+          .subscribe({
+            next: () => {
+              this.deleteTargetSubject.next(null);
+              this.refresh$.next();
+              this.toastService.success('Notice deleted successfully.');
+            },
+            error: () => {
+              this.errorSubject.next('Unable to delete notice. Please try again.');
+              this.toastService.error('Unable to delete notice.');
+            }
+          });
       });
   }
 

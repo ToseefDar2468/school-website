@@ -1,11 +1,13 @@
 ﻿import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BehaviorSubject, catchError, combineLatest, finalize, map, of, shareReplay, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, finalize, map, of, shareReplay, switchMap, take, tap } from 'rxjs';
 
 import { GalleryAlbum } from '../../../core/models/gallery-album.model';
 import { GalleryApiService } from '../../../core/api/gallery-api.service';
 import { GalleryAlbumUpsertDto } from '../../../core/api/gallery-api.models';
+import { ConfirmDialogService } from '../../../core/ui/confirm-dialog/confirm-dialog.service';
+import { ToastService } from '../../../core/ui/toast/toast.service';
 import { AdminModalComponent } from '../../components/admin-modal/admin-modal.component';
 
 interface AlbumFormValue {
@@ -24,12 +26,13 @@ interface AlbumFormValue {
 })
 export class AdminGalleryPage {
   private readonly galleryApi = inject(GalleryApiService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly toastService = inject(ToastService);
 
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
   private readonly loadingSubject = new BehaviorSubject<boolean>(false);
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
   private readonly formOpenSubject = new BehaviorSubject<boolean>(false);
-  private readonly deleteOpenSubject = new BehaviorSubject<boolean>(false);
   private readonly editingAlbumSubject = new BehaviorSubject<GalleryAlbum | null>(null);
   private readonly deleteTargetSubject = new BehaviorSubject<GalleryAlbum | null>(null);
   private readonly savingSubject = new BehaviorSubject<boolean>(false);
@@ -52,6 +55,7 @@ export class AdminGalleryPage {
         map((albums) => albums.slice().sort((a, b) => a.title.localeCompare(b.title))),
         catchError(() => {
           this.errorSubject.next('Unable to load albums. Please try again.');
+          this.toastService.error('Unable to load albums.');
           return of([] as GalleryAlbum[]);
         }),
         finalize(() => this.loadingSubject.next(false))
@@ -65,7 +69,6 @@ export class AdminGalleryPage {
     isLoading: this.loadingSubject,
     errorMessage: this.errorSubject,
     formOpen: this.formOpenSubject,
-    deleteOpen: this.deleteOpenSubject,
     editingAlbum: this.editingAlbumSubject,
     deleteTarget: this.deleteTargetSubject,
     isSaving: this.savingSubject,
@@ -122,43 +125,50 @@ export class AdminGalleryPage {
         next: () => {
           this.closeForm();
           this.refresh$.next();
+          this.toastService.success(
+            editingAlbum ? 'Album updated successfully.' : 'Album created successfully.'
+          );
         },
         error: () => {
           this.errorSubject.next('Unable to save album. Please try again.');
+          this.toastService.error('Unable to save album.');
         }
       });
   }
 
   openDelete(album: GalleryAlbum): void {
-    this.deleteTargetSubject.next(album);
-    this.deleteOpenSubject.next(true);
-  }
-
-  closeDelete(): void {
-    this.deleteOpenSubject.next(false);
-    this.deleteTargetSubject.next(null);
-  }
-
-  confirmDelete(): void {
-    const target = this.deleteTargetSubject.getValue();
-    if (!target || this.deletingSubject.getValue()) {
-      return;
-    }
-
-    this.deletingSubject.next(true);
-    this.errorSubject.next(null);
-
-    this.galleryApi
-      .adminDeleteAlbum(target.id)
-      .pipe(finalize(() => this.deletingSubject.next(false)))
-      .subscribe({
-        next: () => {
-          this.closeDelete();
-          this.refresh$.next();
-        },
-        error: () => {
-          this.errorSubject.next('Unable to delete album. Please try again.');
+    this.confirmDialog
+      .confirm({
+        title: 'Delete album',
+        message: `Are you sure you want to delete "${album.title}"?`,
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        intent: 'danger'
+      })
+      .pipe(take(1))
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          return;
         }
+
+        this.deleteTargetSubject.next(album);
+        this.deletingSubject.next(true);
+        this.errorSubject.next(null);
+
+        this.galleryApi
+          .adminDeleteAlbum(album.id)
+          .pipe(finalize(() => this.deletingSubject.next(false)))
+          .subscribe({
+            next: () => {
+              this.deleteTargetSubject.next(null);
+              this.refresh$.next();
+              this.toastService.success('Album deleted successfully.');
+            },
+            error: () => {
+              this.errorSubject.next('Unable to delete album. Please try again.');
+              this.toastService.error('Unable to delete album.');
+            }
+          });
       });
   }
 
