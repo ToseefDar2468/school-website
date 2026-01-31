@@ -5,8 +5,8 @@ export const routes: Routes = [
   {
     path: 'admin/login',
     loadComponent: () =>
-      import('./admin/pages/login/admin-login.component').then(
-        (m) => m.AdminLoginComponent
+      import('./admin/pages/login/admin-login.page').then(
+        (m) => m.AdminLoginPage
       )
   },
   {
