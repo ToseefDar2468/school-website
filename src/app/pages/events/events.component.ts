@@ -4,7 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { combineLatest, map, startWith } from 'rxjs';
 import { Event } from '../../core/models/event.model';
-import { DataService } from '../../core/services/data.service';
+import { EventsApiService } from '../../core/api/events-api.service';
 import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,12 +27,12 @@ import { MatInputModule } from '@angular/material/input';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventsComponent {
-  private readonly dataService = inject(DataService);
+  private readonly eventsApi = inject(EventsApiService);
 
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly filterControl = new FormControl<'upcoming' | 'past'>('upcoming', { nonNullable: true });
 
-  private readonly events$ = this.dataService.getEvents();
+  private readonly events$ = this.eventsApi.getEvents();
   private readonly search$ = this.searchControl.valueChanges.pipe(startWith(this.searchControl.value));
   private readonly filter$ = this.filterControl.valueChanges.pipe(startWith(this.filterControl.value));
 

@@ -1,8 +1,8 @@
 ﻿import { AsyncPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { map, of, switchMap } from 'rxjs';
-import { DataService } from '../../core/services/data.service';
+import { catchError, map, of, switchMap } from 'rxjs';
+import { EventsApiService } from '../../core/api/events-api.service';
 import { LightboxModalComponent } from '../../components/lightbox-modal/lightbox-modal.component';
 
 @Component({
@@ -14,15 +14,15 @@ import { LightboxModalComponent } from '../../components/lightbox-modal/lightbox
 })
 export class EventDetailComponent {
   private readonly route = inject(ActivatedRoute);
-  private readonly dataService = inject(DataService);
+  private readonly eventsApi = inject(EventsApiService);
 
   selectedImageUrl: string | null = null;
   selectedImageAlt = '';
 
   readonly event$ = this.route.paramMap.pipe(
     map((params) => params.get('id')),
-    switchMap((id) => (id ? this.dataService.getEventById(id) : of(undefined))),
-    map((event) => event ?? null)
+    switchMap((id) => (id ? this.eventsApi.getEvent(id) : of(null))),
+    catchError(() => of(null))
   );
 
   openLightbox(url: string, alt: string): void {

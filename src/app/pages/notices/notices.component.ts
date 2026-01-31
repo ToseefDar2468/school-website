@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { combineLatest, map, startWith } from 'rxjs';
 
 import { Notice } from '../../core/models/notice.model';
-import { DataService } from '../../core/services/data.service';
+import { NoticesApiService } from '../../core/api/notices-api.service';
 import { compareDateISO } from '../../core/utils/date.utils';
 import { BadgeComponent } from '../../components/ui/badge/badge.component';
 import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
@@ -36,7 +36,7 @@ interface FilterOption {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoticesComponent {
-  private readonly dataService = inject(DataService);
+  private readonly noticesApi = inject(NoticesApiService);
 
   readonly searchControl = new FormControl('', { nonNullable: true });
   readonly filterControl = new FormControl<'all' | 'pinned' | 'latest'>('all', { nonNullable: true });
@@ -51,7 +51,7 @@ export class NoticesComponent {
   private readonly filter$ = this.filterControl.valueChanges.pipe(startWith(this.filterControl.value));
 
   readonly vm$ = combineLatest([
-    this.dataService.getNotices(),
+    this.noticesApi.getNotices(true),
     this.search$,
     this.filter$
   ]).pipe(

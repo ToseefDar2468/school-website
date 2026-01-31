@@ -1,8 +1,9 @@
-import { AsyncPipe } from '@angular/common';
+﻿import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { map, of, switchMap } from 'rxjs';
-import { DataService } from '../../core/services/data.service';
+import { catchError, map, of, switchMap } from 'rxjs';
+import { GalleryApiService } from '../../core/api/gallery-api.service';
+import { GalleryAlbum } from '../../core/models/gallery-album.model';
 import { LightboxModalComponent } from '../../components/lightbox-modal/lightbox-modal.component';
 
 @Component({
@@ -14,15 +15,16 @@ import { LightboxModalComponent } from '../../components/lightbox-modal/lightbox
 })
 export class AlbumDetailComponent {
   private readonly route = inject(ActivatedRoute);
-  private readonly dataService = inject(DataService);
+  private readonly galleryApi = inject(GalleryApiService);
 
   selectedImageUrl: string | null = null;
   selectedImageAlt = '';
 
   readonly album$ = this.route.paramMap.pipe(
     map((params) => params.get('id')),
-    switchMap((id) => (id ? this.dataService.getAlbumById(id) : of(undefined))),
-    map((album) => (album ? this.mapImages(album) : null))
+    switchMap((id) => (id ? this.galleryApi.getAlbum(id) : of(null))),
+    map((album) => (album ? this.mapImages(album) : null)),
+    catchError(() => of(null))
   );
 
   openLightbox(url: string, alt: string): void {
@@ -42,7 +44,7 @@ export class AlbumDetailComponent {
     return url;
   }
 
-  private mapImages(album: { imageUrls: string[]; coverImageUrl: string,title: string, category: string }) {
+  private mapImages(album: GalleryAlbum): GalleryAlbum {
     return {
       ...album,
       coverImageUrl: this.resolveImage(album.coverImageUrl, 0),

@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { combineLatest, map, startWith } from 'rxjs';
 
 import { GalleryAlbum } from '../../core/models/gallery-album.model';
-import { DataService } from '../../core/services/data.service';
+import { GalleryApiService } from '../../core/api/gallery-api.service';
 import { BadgeComponent } from '../../components/ui/badge/badge.component';
 import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,12 +32,12 @@ interface GalleryView {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GalleryComponent {
-  private readonly dataService = inject(DataService);
+  private readonly galleryApi = inject(GalleryApiService);
 
   readonly categoryControl = new FormControl('All', { nonNullable: true });
 
   readonly view$ = combineLatest([
-    this.dataService.getGalleryAlbums(),
+    this.galleryApi.getAlbums(),
     this.categoryControl.valueChanges.pipe(startWith(this.categoryControl.value))
   ]).pipe(map(([albums, category]) => this.buildView(albums, category)));
 

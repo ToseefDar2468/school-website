@@ -14,7 +14,7 @@ export class AuthService {
     const payload: LoginRequest = { email, password };
 
     return this.http
-      .post<LoginResponse>(`${environment.API_URL}/auth/login`, payload)
+      .post<LoginResponse>(`${environment.apiUrl}/auth/login`, payload)
       .pipe(tap((response) => this.storeToken(response.accessToken)));
   }
 

@@ -36,14 +36,14 @@ export class AdminInquiriesService {
       params = params.set('search', filters.search);
     }
 
-    return this.http.get<Inquiry[]>(`${environment.API_URL}/admin/inquiries`, {
+    return this.http.get<Inquiry[]>(`${environment.apiUrl}/admin/inquiries`, {
       params
     });
   }
 
   updateStatus(id: string, status: InquiryStatus): Observable<Inquiry> {
     return this.http.patch<Inquiry>(
-      `${environment.API_URL}/admin/inquiries/${id}/status`,
+      `${environment.apiUrl}/admin/inquiries/${id}/status`,
       { status }
     );
   }

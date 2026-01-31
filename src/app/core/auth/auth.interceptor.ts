@@ -8,7 +8,7 @@ const normalizeUrl = (url: string): string => url.replace(/\/+$/, '');
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const apiUrl = normalizeUrl(environment.API_URL);
+  const apiUrl = normalizeUrl(environment.apiUrl);
   const loginUrl = `${apiUrl}/auth/login`;
 
   if (!req.url.startsWith(apiUrl) || req.url.startsWith(loginUrl)) {
