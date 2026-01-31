@@ -40,6 +40,11 @@ export class AdminLayoutComponent {
       description: 'Manage school events'
     },
     {
+      label: 'Gallery',
+      path: '/admin/gallery',
+      description: 'Manage albums and media'
+    },
+    {
       label: 'Notices',
       path: '/admin/notices',
       description: 'Manage announcements'

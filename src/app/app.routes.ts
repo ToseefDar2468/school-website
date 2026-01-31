@@ -44,6 +44,13 @@ export const routes: Routes = [
           )
       },
       {
+        path: 'gallery',
+        loadComponent: () =>
+          import('./admin/pages/gallery/admin-gallery.page').then(
+            (m) => m.AdminGalleryPage
+          )
+      },
+      {
         path: 'notices',
         loadComponent: () =>
           import('./admin/pages/notices/admin-notices.page').then(
