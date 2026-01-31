@@ -1,0 +1,47 @@
+﻿<div class="min-h-screen bg-slate-950 text-slate-100">
+  <div class="flex min-h-screen items-center justify-center px-4 py-12">
+    <div class="w-full max-w-lg rounded-3xl border border-slate-800/80 bg-slate-900/80 p-8 shadow-2xl">
+      <div class="space-y-2">
+        <p class="text-xs uppercase tracking-[0.3em] text-emerald-400">Admin Access</p>
+        <h1 class="text-2xl font-semibold text-white">Sign in to manage the campus</h1>
+        <p class="text-sm text-slate-400">Use your staff credentials to continue.</p>
+      </div>
+
+      <form class="mt-8 space-y-5" (submit)="submit(); $event.preventDefault()">
+        <div class="space-y-2">
+          <label class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Email</label>
+          <input
+            type="email"
+            class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:border-emerald-400 focus:outline-none"
+            placeholder="admin@school.edu"
+            [value]="email()"
+            (input)="updateEmail($any($event.target).value)"
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Password</label>
+          <input
+            type="password"
+            class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-600 focus:border-emerald-400 focus:outline-none"
+            placeholder="********"
+            [value]="password()"
+            (input)="updatePassword($any($event.target).value)"
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="flex w-full items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+          [disabled]="isSubmitting()"
+        >
+          {{ isSubmitting() ? 'Signing in...' : 'Sign in' }}
+        </button>
+
+        <p class="text-center text-xs text-slate-500">Forgot your password? Contact the system administrator.</p>
+      </form>
+    </div>
+  </div>
+</div>

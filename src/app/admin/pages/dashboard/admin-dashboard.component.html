@@ -1,0 +1,38 @@
+﻿<div class="space-y-8">
+  <div>
+    <p class="text-xs uppercase tracking-[0.3em] text-emerald-400">Dashboard</p>
+    <h1 class="text-2xl font-semibold text-white">Operations snapshot</h1>
+    <p class="mt-1 text-sm text-slate-400">Quick metrics to keep the day on track.</p>
+  </div>
+
+  <section class="grid gap-4 md:grid-cols-3">
+    <div
+      *ngFor="let stat of stats()"
+      class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"
+    >
+      <p class="text-xs uppercase tracking-[0.2em] text-slate-500">{{ stat.label }}</p>
+      <p class="mt-2 text-3xl font-semibold text-white">{{ stat.value }}</p>
+      <p class="mt-2 text-sm text-emerald-400">{{ stat.delta }}</p>
+    </div>
+  </section>
+
+  <section class="rounded-3xl border border-slate-800 bg-slate-900/60 p-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Focus today</p>
+        <h2 class="text-lg font-semibold text-white">Recommended actions</h2>
+      </div>
+      <span class="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-400">Next 24h</span>
+    </div>
+
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      <div
+        *ngFor="let action of quickActions()"
+        class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4"
+      >
+        <p class="text-sm font-semibold text-white">{{ action.title }}</p>
+        <p class="mt-2 text-sm text-slate-400">{{ action.description }}</p>
+      </div>
+    </div>
+  </section>
+</div>

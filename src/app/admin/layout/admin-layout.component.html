@@ -1,0 +1,80 @@
+﻿<div class="min-h-screen bg-slate-950 text-slate-100">
+  <div class="flex min-h-screen">
+    <div
+      class="fixed inset-0 z-30 bg-slate-900/60 backdrop-blur-sm lg:hidden"
+      *ngIf="sidebarOpen()"
+      (click)="closeSidebar()"
+    ></div>
+
+    <aside
+      class="fixed inset-y-0 left-0 z-40 w-64 border-r border-slate-800 bg-slate-900/95 px-4 py-6 shadow-xl transition-transform duration-200 lg:translate-x-0"
+      [ngClass]="{
+        '-translate-x-full': !sidebarOpen(),
+        'translate-x-0': sidebarOpen()
+      }"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-[0.25em] text-slate-400">Admin</p>
+          <p class="text-lg font-semibold">School Console</p>
+        </div>
+        <button
+          type="button"
+          class="rounded-lg border border-slate-700 p-2 text-slate-200 hover:border-slate-500 lg:hidden"
+          (click)="closeSidebar()"
+          aria-label="Close sidebar"
+        >
+          &times;
+        </button>
+      </div>
+
+      <nav class="mt-8 space-y-2">
+        <a
+          *ngFor="let item of navItems()"
+          [routerLink]="item.path"
+          routerLinkActive="bg-slate-800 text-white"
+          class="group flex items-start gap-3 rounded-xl px-3 py-3 text-sm text-slate-300 transition hover:bg-slate-800/80"
+          (click)="closeSidebar()"
+        >
+          <div class="mt-1 h-2 w-2 rounded-full bg-emerald-400/80"></div>
+          <div>
+            <p class="text-sm font-semibold">{{ item.label }}</p>
+            <p class="text-xs text-slate-400">{{ item.description }}</p>
+          </div>
+        </a>
+      </nav>
+    </aside>
+
+    <div class="flex min-h-screen flex-1 flex-col lg:pl-64">
+      <header class="sticky top-0 z-20 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
+        <div class="flex items-center justify-between px-4 py-4 sm:px-6">
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              class="rounded-lg border border-slate-700 p-2 text-slate-200 hover:border-slate-500 lg:hidden"
+              (click)="toggleSidebar()"
+              aria-label="Toggle sidebar"
+            >
+              &#9776;
+            </button>
+            <div>
+              <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Admin Panel</p>
+              <p class="text-lg font-semibold">Welcome back</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400 hover:text-emerald-300"
+            (click)="logout()"
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+
+      <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+</div>
