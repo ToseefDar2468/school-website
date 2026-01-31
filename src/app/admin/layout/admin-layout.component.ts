@@ -35,6 +35,11 @@ export class AdminLayoutComponent {
       description: 'Admissions and contact requests'
     },
     {
+      label: 'Events',
+      path: '/admin/events',
+      description: 'Manage school events'
+    },
+    {
       label: 'Notices',
       path: '/admin/notices',
       description: 'Manage announcements'

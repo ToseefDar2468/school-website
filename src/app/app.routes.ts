@@ -37,6 +37,13 @@ export const routes: Routes = [
           )
       },
       {
+        path: 'events',
+        loadComponent: () =>
+          import('./admin/pages/events/admin-events.page').then(
+            (m) => m.AdminEventsPage
+          )
+      },
+      {
         path: 'notices',
         loadComponent: () =>
           import('./admin/pages/notices/admin-notices.page').then(
