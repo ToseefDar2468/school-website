@@ -39,8 +39,8 @@ export const routes: Routes = [
       {
         path: 'notices',
         loadComponent: () =>
-          import('./admin/pages/notices/admin-notices.component').then(
-            (m) => m.AdminNoticesComponent
+          import('./admin/pages/notices/admin-notices.page').then(
+            (m) => m.AdminNoticesPage
           )
       }
     ]
