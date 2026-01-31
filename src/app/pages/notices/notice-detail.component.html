@@ -1,5 +1,5 @@
-<section class="space-y-6">
-  <ng-container *ngIf="notice$ | async as notice; else notFound">
+﻿<section class="space-y-6">
+  @if (notice$ | async; as notice) {
     <div class="space-y-2">
       <p class="text-sm text-text-muted">{{ notice.dateISO | date: 'mediumDate' }}</p>
       <h1 class="page-title">{{ notice.title }}</h1>
@@ -10,19 +10,12 @@
     </p>
 
     <div class="flex flex-wrap gap-3">
-      <a
-        *ngIf="notice.attachmentUrl"
-        class="btn btn-primary"
-        [href]="notice.attachmentUrl"
-        download
-      >
-        Download attachment
-      </a>
+      @if (notice.attachmentUrl) {
+        <a class="btn btn-primary" [href]="notice.attachmentUrl" download>Download attachment</a>
+      }
       <a class="btn btn-outline" routerLink="/notices">Back to notices</a>
     </div>
-  </ng-container>
-
-  <ng-template #notFound>
+  } @else {
     <div class="card space-y-3">
       <h1 class="text-2xl font-semibold text-text">Notice not found</h1>
       <p class="text-sm text-text-muted">
@@ -30,5 +23,5 @@
       </p>
       <a class="link text-sm font-semibold" routerLink="/notices">Back to notices</a>
     </div>
-  </ng-template>
+  }
 </section>

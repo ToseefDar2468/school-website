@@ -1,8 +1,9 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+﻿import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { combineLatest, map, startWith } from 'rxjs';
+
 import { GalleryAlbum } from '../../core/models/gallery-album.model';
 import { DataService } from '../../core/services/data.service';
 import { BadgeComponent } from '../../components/ui/badge/badge.component';
@@ -10,15 +11,16 @@ import { SectionHeaderComponent } from '../../components/ui/section-header/secti
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
-type CategoryFilter = 'All' | string;
+interface GalleryView {
+  categories: string[];
+  albums: GalleryAlbum[];
+}
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
   imports: [
     AsyncPipe,
-    NgFor,
-    NgIf,
     ReactiveFormsModule,
     RouterLink,
     BadgeComponent,
@@ -32,40 +34,23 @@ type CategoryFilter = 'All' | string;
 export class GalleryComponent {
   private readonly dataService = inject(DataService);
 
-  readonly categoryControl = new FormControl<CategoryFilter>('All', { nonNullable: true });
+  readonly categoryControl = new FormControl('All', { nonNullable: true });
 
-  private readonly albums$ = this.dataService.getGalleryAlbums();
-  private readonly category$ = this.categoryControl.valueChanges.pipe(
-    startWith(this.categoryControl.value)
-  );
-
-  readonly view$ = combineLatest([this.albums$, this.category$]).pipe(
-    map(([albums, category]) => {
-      const categories = this.buildCategories(albums);
-      const filtered =
-        category === 'All' ? albums : albums.filter((album) => album.category === category);
-      const displayAlbums = filtered.map((album, index) => ({
-        ...album,
-        coverImageUrl: this.resolveImage(album.coverImageUrl, index)
-      }));
-      return { categories, albums: displayAlbums, category };
-    })
-  );
+  readonly view$ = combineLatest([
+    this.dataService.getGalleryAlbums(),
+    this.categoryControl.valueChanges.pipe(startWith(this.categoryControl.value))
+  ]).pipe(map(([albums, category]) => this.buildView(albums, category)));
 
   trackById(_: number, album: GalleryAlbum): string {
     return album.id;
   }
 
-  resolveImage(url: string, index: number): string {
-    if (!url || url.startsWith('assets/')) {
-      const seed = 1200 + index;
-      return `https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80&sig=${seed}`;
-    }
-    return url;
-  }
+  private buildView(albums: GalleryAlbum[], category: string): GalleryView {
+    const categories = ['All', ...new Set(albums.map((album) => album.category))];
 
-  private buildCategories(albums: GalleryAlbum[]): CategoryFilter[] {
-    const unique = Array.from(new Set(albums.map((album) => album.category)));
-    return ['All', ...unique];
+    return {
+      categories,
+      albums: category === 'All' ? albums : albums.filter((album) => album.category === category)
+    };
   }
 }

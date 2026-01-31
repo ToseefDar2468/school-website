@@ -1,4 +1,4 @@
-<section class="space-y-8">
+﻿<section class="space-y-8">
   <header>
     <app-section-header
       title="Gallery"
@@ -21,24 +21,22 @@
     </mat-select>
   </mat-form-field>
 
-  <ng-container *ngIf="view$ | async as vm">
+  @if (view$ | async; as vm) {
     <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-      <article
-        class="card card-hover overflow-hidden"
-        *ngFor="let album of vm.albums; trackBy: trackById"
-      >
-        <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-2">
-          <img class="h-full w-full object-cover" [src]="album.coverImageUrl" [alt]="album.title" />
-        </div>
-        <div class="mt-4 space-y-2">
-          <app-badge [label]="album.category"></app-badge>
-          <h3 class="text-lg font-semibold text-text">{{ album.title }}</h3>
-          <a class="link text-sm font-semibold" [routerLink]="['/gallery', album.id]">
-            View album
-          </a>
-        </div>
-      </article>
+      @for (album of vm.albums; track album.id) {
+        <article class="card card-hover overflow-hidden">
+          <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-2">
+            <img class="h-full w-full object-cover" [src]="album.coverImageUrl" [alt]="album.title" />
+          </div>
+          <div class="mt-4 space-y-2">
+            <app-badge [label]="album.category"></app-badge>
+            <h3 class="text-lg font-semibold text-text">{{ album.title }}</h3>
+            <a class="link text-sm font-semibold" [routerLink]="['/gallery', album.id]">
+              View album
+            </a>
+          </div>
+        </article>
+      }
     </div>
-  </ng-container>
+  }
 </section>
-

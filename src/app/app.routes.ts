@@ -32,8 +32,8 @@ export const routes: Routes = [
       {
         path: 'inquiries',
         loadComponent: () =>
-          import('./admin/pages/inquiries/admin-inquiries.component').then(
-            (m) => m.AdminInquiriesComponent
+          import('./admin/pages/inquiries/admin-inquiries.page').then(
+            (m) => m.AdminInquiriesPage
           )
       },
       {

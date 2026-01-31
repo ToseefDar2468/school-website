@@ -1,5 +1,4 @@
-﻿import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize, take } from 'rxjs';
@@ -9,7 +8,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './admin-login.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

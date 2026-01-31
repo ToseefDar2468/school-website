@@ -1,4 +1,4 @@
-<section class="space-y-8">
+﻿<section class="space-y-8">
   <header>
     <app-section-header
       title="Events"
@@ -28,32 +28,33 @@
     </div>
   </div>
 
-  <ng-container *ngIf="eventsView$ | async as vm">
-    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3" *ngIf="vm.events.length; else emptyEvents">
-      <article class="card card-hover overflow-hidden" *ngFor="let event of vm.events; trackBy: trackById">
-        <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-2">
-          <img
-            class="h-full w-full object-cover"
-            [src]="event.coverImageUrl"
-            [alt]="event.title"
-            loading="lazy"
-          />
-        </div>
-        <div class="mt-4 space-y-2">
-          <p class="text-xs text-text-muted">{{ event.dateISO | date: 'mediumDate' }}</p>
-          <h3 class="text-lg font-semibold text-text">{{ event.title }}</h3>
-          <p class="text-sm text-text-muted">{{ event.venue }}</p>
-          <a class="link text-sm font-semibold" [routerLink]="['/events', event.id]">Read more</a>
-        </div>
-      </article>
-    </div>
-
-    <ng-template #emptyEvents>
+  @if (eventsView$ | async; as vm) {
+    @if (vm.events.length) {
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        @for (event of vm.events; track event.id) {
+          <article class="card card-hover overflow-hidden">
+            <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-2">
+              <img
+                class="h-full w-full object-cover"
+                [src]="event.coverImageUrl"
+                [alt]="event.title"
+                loading="lazy"
+              />
+            </div>
+            <div class="mt-4 space-y-2">
+              <p class="text-xs text-text-muted">{{ event.dateISO | date: 'mediumDate' }}</p>
+              <h3 class="text-lg font-semibold text-text">{{ event.title }}</h3>
+              <p class="text-sm text-text-muted">{{ event.venue }}</p>
+              <a class="link text-sm font-semibold" [routerLink]="['/events', event.id]">Read more</a>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
       <div class="card space-y-2 text-sm text-text-muted">
         <p>No events match your search criteria.</p>
         <p>Try a different filter or clear the search.</p>
       </div>
-    </ng-template>
-  </ng-container>
+    }
+  }
 </section>
-

@@ -1,6 +1,8 @@
-﻿import { NgClass, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+﻿import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
+import { AuthService } from '../../core/auth/auth.service';
 
 interface AdminNavItem {
   label: string;
@@ -11,11 +13,14 @@ interface AdminNavItem {
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [NgClass, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './admin-layout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminLayoutComponent {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   readonly sidebarOpen = signal(false);
 
   readonly navItems = signal<AdminNavItem[]>([
@@ -45,6 +50,8 @@ export class AdminLayoutComponent {
   }
 
   logout(): void {
+    this.authService.logout();
     this.sidebarOpen.set(false);
+    this.router.navigate(['/admin/login']);
   }
 }

@@ -1,4 +1,4 @@
-<section class="space-y-8">
+﻿<section class="space-y-8">
   <header>
     <app-section-header
       title="Notices"
@@ -31,54 +31,56 @@
     </mat-form-field>
   </div>
 
-  <ng-container *ngIf="vm$ | async as vm">
-    <section class="space-y-4" *ngIf="vm.pinned.length">
-      <div class="flex items-center justify-between">
-        <h2 class="section-title">Pinned notices</h2>
-        <app-badge label="Pinned" variant="pinned"></app-badge>
-      </div>
+  @if (vm$ | async; as vm) {
+    @if (vm.pinned.length) {
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Pinned notices</h2>
+          <app-badge label="Pinned" variant="pinned"></app-badge>
+        </div>
 
-      <div class="grid gap-4 md:grid-cols-2">
-        <article class="card card-hover space-y-3" *ngFor="let notice of vm.pinned; trackBy: trackById">
-          <div class="flex flex-wrap items-center gap-2 text-xs text-text-muted">
-            <span>{{ notice.dateISO | date: 'mediumDate' }}</span>
-            <app-badge label="Pinned" variant="pinned"></app-badge>
-          </div>
-          <h3 class="text-lg font-semibold text-text">{{ notice.title }}</h3>
-          <p class="text-sm text-text-muted">{{ excerpt(notice.description) }}</p>
-          <a class="link text-sm font-semibold" [routerLink]="['/notices', notice.id]">
-            Read more
-          </a>
-        </article>
-      </div>
-    </section>
+        <div class="grid gap-4 md:grid-cols-2">
+          @for (notice of vm.pinned; track notice.id) {
+            <article class="card card-hover space-y-3">
+              <div class="flex flex-wrap items-center gap-2 text-xs text-text-muted">
+                <span>{{ notice.dateISO | date: 'mediumDate' }}</span>
+                <app-badge label="Pinned" variant="pinned"></app-badge>
+              </div>
+              <h3 class="text-lg font-semibold text-text">{{ notice.title }}</h3>
+              <p class="text-sm text-text-muted">{{ excerpt(notice.description) }}</p>
+              <a class="link text-sm font-semibold" [routerLink]="['/notices', notice.id]">
+                Read more
+              </a>
+            </article>
+          }
+        </div>
+      </section>
+    }
 
     <section class="space-y-4">
       <h2 class="section-title">All notices</h2>
 
-      <div class="grid gap-4 md:grid-cols-2" *ngIf="vm.regular.length; else emptyState">
-        <article
-          class="card card-hover space-y-3"
-          *ngFor="let notice of vm.regular; trackBy: trackById"
-        >
-          <div class="flex flex-wrap items-center gap-2 text-xs text-text-muted">
-            <span>{{ notice.dateISO | date: 'mediumDate' }}</span>
-          </div>
-          <h3 class="text-lg font-semibold text-text">{{ notice.title }}</h3>
-          <p class="text-sm text-text-muted">{{ excerpt(notice.description) }}</p>
-          <a class="link text-sm font-semibold" [routerLink]="['/notices', notice.id]">
-            Read more
-          </a>
-        </article>
-      </div>
-
-      <ng-template #emptyState>
+      @if (vm.regular.length) {
+        <div class="grid gap-4 md:grid-cols-2">
+          @for (notice of vm.regular; track notice.id) {
+            <article class="card card-hover space-y-3">
+              <div class="flex flex-wrap items-center gap-2 text-xs text-text-muted">
+                <span>{{ notice.dateISO | date: 'mediumDate' }}</span>
+              </div>
+              <h3 class="text-lg font-semibold text-text">{{ notice.title }}</h3>
+              <p class="text-sm text-text-muted">{{ excerpt(notice.description) }}</p>
+              <a class="link text-sm font-semibold" [routerLink]="['/notices', notice.id]">
+                Read more
+              </a>
+            </article>
+          }
+        </div>
+      } @else {
         <div class="card space-y-2 text-sm text-text-muted">
           <p>No notices match your search and filter selection.</p>
           <p>Try clearing the search or switching filters.</p>
         </div>
-      </ng-template>
+      }
     </section>
-  </ng-container>
+  }
 </section>
-

@@ -1,10 +1,11 @@
 ﻿<div class="min-h-screen bg-slate-950 text-slate-100">
   <div class="flex min-h-screen">
-    <div
-      class="fixed inset-0 z-30 bg-slate-900/60 backdrop-blur-sm lg:hidden"
-      *ngIf="sidebarOpen()"
-      (click)="closeSidebar()"
-    ></div>
+    @if (sidebarOpen()) {
+      <div
+        class="fixed inset-0 z-30 bg-slate-900/60 backdrop-blur-sm lg:hidden"
+        (click)="closeSidebar()"
+      ></div>
+    }
 
     <aside
       class="fixed inset-y-0 left-0 z-40 w-64 border-r border-slate-800 bg-slate-900/95 px-4 py-6 shadow-xl transition-transform duration-200 lg:translate-x-0"
@@ -29,19 +30,20 @@
       </div>
 
       <nav class="mt-8 space-y-2">
-        <a
-          *ngFor="let item of navItems()"
-          [routerLink]="item.path"
-          routerLinkActive="bg-slate-800 text-white"
-          class="group flex items-start gap-3 rounded-xl px-3 py-3 text-sm text-slate-300 transition hover:bg-slate-800/80"
-          (click)="closeSidebar()"
-        >
-          <div class="mt-1 h-2 w-2 rounded-full bg-emerald-400/80"></div>
-          <div>
-            <p class="text-sm font-semibold">{{ item.label }}</p>
-            <p class="text-xs text-slate-400">{{ item.description }}</p>
-          </div>
-        </a>
+        @for (item of navItems(); track item.path) {
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="bg-slate-800 text-white"
+            class="group flex items-start gap-3 rounded-xl px-3 py-3 text-sm text-slate-300 transition hover:bg-slate-800/80"
+            (click)="closeSidebar()"
+          >
+            <div class="mt-1 h-2 w-2 rounded-full bg-emerald-400/80"></div>
+            <div>
+              <p class="text-sm font-semibold">{{ item.label }}</p>
+              <p class="text-xs text-slate-400">{{ item.description }}</p>
+            </div>
+          </a>
+        }
       </nav>
     </aside>
 

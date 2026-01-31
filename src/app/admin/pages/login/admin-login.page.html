@@ -7,12 +7,11 @@
         <p class="text-sm text-slate-400">Use your staff credentials to continue.</p>
       </div>
 
-      <div
-        *ngIf="errorMessage()"
-        class="mt-6 rounded-2xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-100"
-      >
-        {{ errorMessage() }}
-      </div>
+      @if (errorMessage()) {
+        <div class="mt-6 rounded-2xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+          {{ errorMessage() }}
+        </div>
+      }
 
       <form class="mt-8 space-y-5" [formGroup]="form" (ngSubmit)="submit()">
         <div class="space-y-2">
@@ -25,12 +24,9 @@
             autocomplete="username"
             [attr.aria-invalid]="form.controls.email.invalid && form.controls.email.touched"
           />
-          <p
-            *ngIf="form.controls.email.touched && form.controls.email.invalid"
-            class="text-xs text-rose-300"
-          >
-            Enter a valid email address.
-          </p>
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <p class="text-xs text-rose-300">Enter a valid email address.</p>
+          }
         </div>
 
         <div class="space-y-2">
@@ -43,12 +39,9 @@
             autocomplete="current-password"
             [attr.aria-invalid]="form.controls.password.invalid && form.controls.password.touched"
           />
-          <p
-            *ngIf="form.controls.password.touched && form.controls.password.invalid"
-            class="text-xs text-rose-300"
-          >
-            Password must be at least 6 characters.
-          </p>
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <p class="text-xs text-rose-300">Password must be at least 6 characters.</p>
+          }
         </div>
 
         <button

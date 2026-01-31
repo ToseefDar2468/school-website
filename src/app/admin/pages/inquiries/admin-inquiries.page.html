@@ -1,0 +1,102 @@
+﻿<div class="space-y-6">
+  <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div>
+      <p class="text-xs uppercase tracking-[0.3em] text-emerald-400">Inquiries</p>
+      <h1 class="text-2xl font-semibold text-white">Admission Inquiries</h1>
+      <p class="mt-1 text-sm text-slate-400">Track and update incoming admissions requests.</p>
+    </div>
+
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div class="relative">
+        <input
+          type="search"
+          class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-white placeholder:text-slate-600 focus:border-emerald-400 focus:outline-none"
+          placeholder="Search by name, phone, or class"
+          [formControl]="searchControl"
+        />
+      </div>
+      <div>
+        <select
+          class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none"
+          [formControl]="statusControl"
+        >
+          @for (option of statusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="rounded-2xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (inquiries$ | async; as inquiries) {
+    @if (inquiries.length) {
+      <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60">
+        <div
+          class="grid grid-cols-[2fr,1.5fr,1.3fr,1fr,1fr,1.2fr,1.4fr] gap-4 border-b border-slate-800 bg-slate-950/70 px-6 py-4 text-xs uppercase tracking-[0.25em] text-slate-500"
+        >
+          <span>Student</span>
+          <span>Parent</span>
+          <span>Phone</span>
+          <span>Class</span>
+          <span>Status</span>
+          <span>Date</span>
+          <span>Actions</span>
+        </div>
+
+        @for (inquiry of inquiries; track inquiry.id) {
+          <div
+            class="grid grid-cols-[2fr,1.5fr,1.3fr,1fr,1fr,1.2fr,1.4fr] gap-4 border-b border-slate-800 px-6 py-4 text-sm text-slate-300 last:border-b-0"
+          >
+            <div>
+              <p class="font-semibold text-white">{{ inquiry.studentName }}</p>
+              <p class="text-xs text-slate-500">Student</p>
+            </div>
+            <div>
+              <p class="font-semibold text-white">{{ inquiry.parentName }}</p>
+              <p class="text-xs text-slate-500">Parent/Guardian</p>
+            </div>
+            <div class="text-slate-200">{{ inquiry.phone }}</div>
+            <div class="text-slate-200">{{ inquiry.className }}</div>
+            <div>
+              <span
+                class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold capitalize"
+                [ngClass]="badgeClass(inquiry.status)"
+              >
+                {{ inquiry.status }}
+              </span>
+            </div>
+            <div class="text-slate-400">{{ inquiry.createdAt | date: 'mediumDate' }}</div>
+            <div class="flex items-center gap-3">
+              <select
+                class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white focus:border-emerald-400 focus:outline-none"
+                [value]="inquiry.status"
+                (change)="updateStatus(inquiry, $any($event.target).value)"
+                [disabled]="isPending(inquiry.id)"
+              >
+                @for (option of statusOptions; track option.value) {
+                  <option [value]="option.value" [disabled]="option.value === 'all'">
+                    {{ option.label }}
+                  </option>
+                }
+              </select>
+              @if (isPending(inquiry.id)) {
+                <span class="text-xs text-emerald-300">Updating...</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="rounded-3xl border border-dashed border-slate-700 bg-slate-900/40 p-10 text-center">
+        <p class="text-sm text-slate-300">No inquiries match your filters.</p>
+        <p class="mt-2 text-xs text-slate-500">Try adjusting the search or status filter.</p>
+      </div>
+    }
+  }
+</div>

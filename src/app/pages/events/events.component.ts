@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+﻿import { AsyncPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -16,8 +16,6 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     AsyncPipe,
     DatePipe,
-    NgFor,
-    NgIf,
     ReactiveFormsModule,
     RouterLink,
     SectionHeaderComponent,

@@ -1,18 +1,22 @@
-import { AsyncPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+﻿import { AsyncPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { combineLatest, map, startWith } from 'rxjs';
+
 import { Notice } from '../../core/models/notice.model';
 import { DataService } from '../../core/services/data.service';
-import { sortByDateISO } from '../../core/utils/date.utils';
+import { compareDateISO } from '../../core/utils/date.utils';
 import { BadgeComponent } from '../../components/ui/badge/badge.component';
 import { SectionHeaderComponent } from '../../components/ui/section-header/section-header.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
-type NoticeFilter = 'all' | 'pinned' | 'month';
+interface FilterOption {
+  value: 'all' | 'pinned' | 'latest';
+  label: string;
+}
 
 @Component({
   selector: 'app-notices',
@@ -20,8 +24,6 @@ type NoticeFilter = 'all' | 'pinned' | 'month';
   imports: [
     AsyncPipe,
     DatePipe,
-    NgFor,
-    NgIf,
     ReactiveFormsModule,
     RouterLink,
     BadgeComponent,
@@ -37,65 +39,53 @@ export class NoticesComponent {
   private readonly dataService = inject(DataService);
 
   readonly searchControl = new FormControl('', { nonNullable: true });
-  readonly filterControl = new FormControl<NoticeFilter>('all', { nonNullable: true });
+  readonly filterControl = new FormControl<'all' | 'pinned' | 'latest'>('all', { nonNullable: true });
 
-  private readonly notices$ = this.dataService.getNotices().pipe(map((notices) => sortByDateISO(notices)));
+  readonly filterOptions: FilterOption[] = [
+    { value: 'all', label: 'All notices' },
+    { value: 'pinned', label: 'Pinned only' },
+    { value: 'latest', label: 'Latest only' }
+  ];
 
   private readonly search$ = this.searchControl.valueChanges.pipe(startWith(this.searchControl.value));
   private readonly filter$ = this.filterControl.valueChanges.pipe(startWith(this.filterControl.value));
 
-  readonly vm$ = combineLatest([this.notices$, this.search$, this.filter$]).pipe(
-    map(([notices, search, filter]) => {
-      const filtered = this.applyFilters(notices, search, filter);
-      return {
-        pinned: filtered.filter((notice) => notice.isPinned),
-        regular: filtered.filter((notice) => !notice.isPinned),
-        filter
-      };
-    })
+  readonly vm$ = combineLatest([
+    this.dataService.getNotices(),
+    this.search$,
+    this.filter$
+  ]).pipe(
+    map(([notices, search, filter]) => this.buildView(notices, search, filter))
   );
-
-  readonly filterOptions: { value: NoticeFilter; label: string }[] = [
-    { value: 'all', label: 'All' },
-    { value: 'pinned', label: 'Pinned' },
-    { value: 'month', label: 'This Month' }
-  ];
 
   trackById(_: number, notice: Notice): string {
     return notice.id;
   }
 
-  excerpt(text: string, maxLength = 140): string {
-    if (text.length <= maxLength) {
-      return text;
-    }
-    const trimmed = text.slice(0, maxLength).trimEnd();
-    return `${trimmed}...`;
+  excerpt(text: string): string {
+    return text.length > 140 ? `${text.slice(0, 140)}...` : text;
   }
 
-  private applyFilters(notices: Notice[], search: string, filter: NoticeFilter): Notice[] {
+  private buildView(notices: Notice[], search: string, filter: 'all' | 'pinned' | 'latest') {
     const term = search.trim().toLowerCase();
-    let filtered = notices;
+    const matches = (notice: Notice) =>
+      !term || notice.title.toLowerCase().includes(term) || notice.description.toLowerCase().includes(term);
 
-    if (term) {
-      filtered = filtered.filter((notice) => {
-        const haystack = `${notice.title} ${notice.description}`.toLowerCase();
-        return haystack.includes(term);
-      });
-    }
+    const pinned = notices
+      .filter((notice) => notice.isPinned)
+      .filter(matches)
+      .slice()
+      .sort((a, b) => compareDateISO(a.dateISO, b.dateISO, 'desc'));
 
-    if (filter === 'pinned') {
-      filtered = filtered.filter((notice) => notice.isPinned);
-    } else if (filter === 'month') {
-      filtered = filtered.filter((notice) => this.isThisMonth(notice.dateISO));
-    }
+    const regular = notices
+      .filter((notice) => !notice.isPinned)
+      .filter(matches)
+      .slice()
+      .sort((a, b) => compareDateISO(a.dateISO, b.dateISO, 'desc'));
 
-    return filtered;
-  }
-
-  private isThisMonth(dateISO: string): boolean {
-    const date = new Date(dateISO);
-    const now = new Date();
-    return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
+    return {
+      pinned: filter === 'all' || filter === 'pinned' ? pinned : [],
+      regular: filter === 'all' || filter === 'latest' ? regular : []
+    };
   }
 }

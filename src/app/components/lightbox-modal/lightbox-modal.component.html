@@ -1,26 +1,27 @@
-<div
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8"
-  *ngIf="isOpen"
-  (click)="onOverlayClick()"
->
+﻿@if (isOpen) {
   <div
-    #dialog
-    class="relative w-full max-w-4xl rounded-2xl bg-surface p-4 shadow-lg outline-none"
-    role="dialog"
-    aria-modal="true"
-    [attr.aria-label]="imageAlt"
-    tabindex="-1"
-    (click)="$event.stopPropagation()"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8"
+    (click)="onOverlayClick()"
   >
-    <button
-      class="absolute right-4 top-4 rounded-full border border-border bg-surface-2 px-3 py-1 text-xs font-semibold text-text hover:bg-surface"
-      type="button"
-      (click)="close()"
+    <div
+      #dialog
+      class="relative w-full max-w-4xl rounded-2xl bg-surface p-4 shadow-lg outline-none"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="imageAlt"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
     >
-      Close
-    </button>
-    <div class="overflow-hidden rounded-xl bg-surface-2">
-      <img class="max-h-[70vh] w-full object-contain" [src]="imageUrl ?? ''" [alt]="imageAlt" />
+      <button
+        class="absolute right-4 top-4 rounded-full border border-border bg-surface-2 px-3 py-1 text-xs font-semibold text-text hover:bg-surface"
+        type="button"
+        (click)="close()"
+      >
+        Close
+      </button>
+      <div class="overflow-hidden rounded-xl bg-surface-2">
+        <img class="max-h-[70vh] w-full object-contain" [src]="imageUrl ?? ''" [alt]="imageAlt" />
+      </div>
     </div>
   </div>
-</div>
+}

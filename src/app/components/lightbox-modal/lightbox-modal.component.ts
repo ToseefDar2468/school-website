@@ -1,10 +1,8 @@
-import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-lightbox-modal',
   standalone: true,
-  imports: [NgIf],
   templateUrl: './lightbox-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -1,5 +1,4 @@
-﻿import { NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 interface InquiryRow {
   name: string;
@@ -11,7 +10,6 @@ interface InquiryRow {
 @Component({
   selector: 'app-admin-inquiries',
   standalone: true,
-  imports: [NgFor],
   templateUrl: './admin-inquiries.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

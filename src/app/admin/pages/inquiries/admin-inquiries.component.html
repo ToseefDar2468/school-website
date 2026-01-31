@@ -13,14 +13,13 @@
       <span>Received</span>
     </div>
 
-    <div
-      *ngFor="let inquiry of inquiries()"
-      class="grid grid-cols-4 gap-4 px-6 py-4 text-sm text-slate-300"
-    >
-      <span class="font-semibold text-white">{{ inquiry.name }}</span>
-      <span>{{ inquiry.program }}</span>
-      <span class="text-emerald-400">{{ inquiry.status }}</span>
-      <span class="text-slate-400">{{ inquiry.received }}</span>
-    </div>
+    @for (inquiry of inquiries(); track inquiry.name) {
+      <div class="grid grid-cols-4 gap-4 px-6 py-4 text-sm text-slate-300">
+        <span class="font-semibold text-white">{{ inquiry.name }}</span>
+        <span>{{ inquiry.program }}</span>
+        <span class="text-emerald-400">{{ inquiry.status }}</span>
+        <span class="text-slate-400">{{ inquiry.received }}</span>
+      </div>
+    }
   </div>
 </div>

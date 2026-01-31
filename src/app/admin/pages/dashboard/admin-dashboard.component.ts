@@ -1,5 +1,4 @@
-﻿import { NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
 interface AdminStat {
   label: string;
@@ -15,7 +14,6 @@ interface AdminQuickAction {
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [NgFor],
   templateUrl: './admin-dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
